@@ -36,6 +36,11 @@ export const apiReqs = {
     config.method = 'get'
     apiFetch(config)
   },
+  detectText: (config) => {
+    config.url = API_DOMAIN + 'detectText/'
+    config.method = 'post'
+    apiFetch(config)
+  }
 }
 
 function apiFetch(config) {
@@ -47,7 +52,16 @@ function apiFetch(config) {
   }
 }
 
-
+/**
+ * API request encapsulation
+ * config.method: [must] request method
+ * config.url: [must] request url
+ * config.data: request data
+ * config.formData: true/false
+ * config.success(res): callback for request successed
+ * config.fail(err): callback for request filed
+ * config.done(): callback for request done
+ */
 function apiRequest(config) {
   // config.data's default value is {}
   if (config.data === undefined) {
@@ -60,7 +74,7 @@ function apiRequest(config) {
   let data = null
 
   if (config.formData) {
-    // Compatibility processing 
+    // Compatibility process
     data = new FormData()
     Object.keys(config.data).forEach(function (key) {
       data.append(key, config.data([key]))

@@ -1,5 +1,5 @@
 /*global chrome*/
-import { apiRequest } from "@/apis"
+import { apiRequest, apiReqs } from "@/apis"
 
 chrome.runtime.onInstalled.addListener(function () {
   chrome.action.disable()
@@ -62,13 +62,22 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
 
     chrome.scripting.executeScript({
       target: { tabId: tab.id },
-      func: analyzeText,
+      func: detectText,
       args: [selectedText]
     })
   }
 })
 
-function analyzeText(selectedText) {
-  const result = `The selected text contains ${selectedText.length} characters.`;
-  alert(result); // Display result
+function detectText(selectedText) {
+  const config = {
+    data: selectedText,
+    method: 'post',
+    success: (res) => {
+      alert(res.name)
+    }
+  }
+  apiReqs.detectText(config)
+
+  // const result = `The selected text contains ${selectedText.length} characters.`
+  // alert(result) // Display result
 }

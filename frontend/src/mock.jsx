@@ -11,3 +11,12 @@ Mock.mock(/login/, {
     accessToken: 'fqh0i-LyINZ-RvK5d-Akj3a-uBYRl'
   }
 })
+
+Mock.mock(/detectText/, {
+  code: 200,
+  msg: 'OK',
+  data: {
+    name: 'Allen',
+    accessToken: 'fqh0i-LyINZ-RvK5d-Akj3a-uBYRl'
+  }
+})
