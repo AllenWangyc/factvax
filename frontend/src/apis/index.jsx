@@ -1,11 +1,11 @@
-import '@/mock'
+// import '@/mock'
 /* global chrome */
 
 // address of required server (mock address in dev env)
 let API_DOMAIN = '/api/'
 
 if (import.meta.env.MODE === 'production') {
-  API_DOMAIN = 'http://localhost/api/'
+  API_DOMAIN = 'http://localhost:5050/api/'
 }
 
 export const API_CODE = {
@@ -36,20 +36,18 @@ export const apiReqs = {
     config.method = 'get'
     apiFetch(config)
   },
-  detectText: (config) => {
+  // Detect text
+  detect: (config) => {
     config.url = API_DOMAIN + 'detectText/'
     config.method = 'post'
+    console.log(API_DOMAIN);
+
     apiFetch(config)
   }
 }
 
 function apiFetch(config) {
-  if (config.background && import.meta.env.MODE === 'production') {
-    sendRequestToBackground(config)
-  }
-  else {
-    apiRequest(config)
-  }
+  apiRequest(config)
 }
 
 /**
@@ -101,27 +99,4 @@ function apiRequest(config) {
       config.done && config.done()
       config.fail && config.fail(API_FAILED)
     })
-}
-
-function sendRequestToBackground(config) {
-  if (chorme && chrome.runtime) {
-    chrome.runtime.sendMessage(
-      {
-        contentRequest: 'apiRequest',
-        config: config,
-      },
-      (result) => {
-        config.done && config.done()
-        if (result.result === 'succ') {
-          config.success && config.success(result)
-        }
-        else {
-          config.fail && config.fail(result.msg)
-        }
-      }
-    )
-  }
-  else {
-    console.log('Cannot find out chrome API')
-  }
 }

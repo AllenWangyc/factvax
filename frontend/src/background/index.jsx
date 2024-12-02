@@ -1,5 +1,5 @@
 /*global chrome*/
-import { apiRequest, apiReqs } from "@/apis"
+import { apiReqs } from "@/apis"
 
 chrome.runtime.onInstalled.addListener(function () {
   chrome.action.disable()
@@ -27,27 +27,6 @@ chrome.runtime.onInstalled.addListener(function () {
   })
 })
 
-chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
-  chrome.tabs.query({ currentWindow: true, active: true }, function (tabs) {
-    const { contentRequest } = request
-    if (contentRequest === 'apiRequest') {
-      let { config } = request
-      config.success = (data) => {
-        data.result = 'succ'
-        sendResponse(data)
-      }
-      config.fail = (msg) => {
-        sendResponse({
-          result: 'fail',
-          msg
-        })
-      }
-      apiRequest(config)
-    }
-  })
-  return true
-})
-
 chrome.runtime.onInstalled.addListener(() => {
   chrome.contextMenus.create({
     id: "detect-text",
@@ -59,25 +38,18 @@ chrome.runtime.onInstalled.addListener(() => {
 chrome.contextMenus.onClicked.addListener((info, tab) => {
   if (info.menuItemId === "detect-text") {
     const selectedText = info.selectionText
-
-    chrome.scripting.executeScript({
-      target: { tabId: tab.id },
-      func: detectText,
-      args: [selectedText]
-    })
+    detectText(selectedText)
   }
 })
 
-function detectText(selectedText) {
+function detectText(text) {
   const config = {
-    data: selectedText,
-    method: 'post',
+    data: {
+      text
+    },
     success: (res) => {
-      alert(res.name)
-    }
+      console.log(res);
+    },
   }
-  apiReqs.detectText(config)
-
-  // const result = `The selected text contains ${selectedText.length} characters.`
-  // alert(result) // Display result
+  apiReqs.detect(config)
 }

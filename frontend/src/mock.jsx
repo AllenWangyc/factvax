@@ -16,7 +16,7 @@ Mock.mock(/detectText/, {
   code: 200,
   msg: 'OK',
   data: {
-    name: 'Allen',
-    accessToken: 'fqh0i-LyINZ-RvK5d-Akj3a-uBYRl'
+    result: 'Credible',
+    explaination: 'This vaccine information is credible.'
   }
 })

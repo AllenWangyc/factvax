@@ -12,6 +12,7 @@ function Login() {
   const [password, setPassword] = useState('')
 
   const onLogin = () => {
+    navigate('/home')
     apiReqs.signIn({
       data: {
         account,
