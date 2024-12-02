@@ -1,4 +1,5 @@
 /*global chrome*/
+import { apiRequest } from "@/apis"
 
 chrome.runtime.onInstalled.addListener(function () {
   chrome.action.disable()
@@ -24,6 +25,27 @@ chrome.runtime.onInstalled.addListener(function () {
     // Add rules
     chrome.declarativeContent.onPageChanged.addRules(rules)
   })
+})
+
+chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
+  chrome.tabs.query({ currentWindow: true, active: true }, function (tabs) {
+    const { contentRequest } = request
+    if (contentRequest === 'apiRequest') {
+      let { config } = request
+      config.success = (data) => {
+        data.result = 'succ'
+        sendResponse(data)
+      }
+      config.fail = (msg) => {
+        sendResponse({
+          result: 'fail',
+          msg
+        })
+      }
+      apiRequest(config)
+    }
+  })
+  return true
 })
 
 chrome.runtime.onInstalled.addListener(() => {

@@ -7,6 +7,14 @@ import { CRX_OUTDIR } from './globalConfig'
 export default defineConfig({
   server: {
     port: 3000,
+    open: '/',
+    // Reverse proxy setting, turn off mockjs before using it.
+    proxy: {
+      '/api': {
+        target: 'http://localhost/',
+        changeOrigin: true
+      }
+    }
   },
   resolve: {
     alias: {
