@@ -29,7 +29,7 @@ export default defineConfig({
     },
   },
   define: {
-    'process.env.NODE.ENV': null
+    'process.env.NODE_ENV': null
   },
   plugins: [react()],
 })

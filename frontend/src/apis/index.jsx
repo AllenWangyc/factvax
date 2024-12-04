@@ -40,8 +40,7 @@ export const apiReqs = {
   detect: (config) => {
     config.url = API_DOMAIN + 'detectText/'
     config.method = 'post'
-    console.log(API_DOMAIN);
-
+    console.log(API_DOMAIN)
     apiFetch(config)
   }
 }
