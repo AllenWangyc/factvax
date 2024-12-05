@@ -7,7 +7,7 @@ import { AntDesignOutlined } from '@ant-design/icons'
 
 function Popup() {
   const { Content, Header, Footer } = Layout
-  const { Title, Text, Link } = Typography;
+  const { Title, Text, Link } = Typography
 
   // Create a button style
   const useStyle = createStyles(({ prefixCls, css }) => ({

@@ -1,5 +1,4 @@
 /*global chrome*/
-import { apiReqs } from "@/apis"
 
 chrome.runtime.onInstalled.addListener(function () {
   chrome.action.disable()
@@ -36,20 +35,12 @@ chrome.runtime.onInstalled.addListener(() => {
 })
 
 chrome.contextMenus.onClicked.addListener((info, tab) => {
+
   if (info.menuItemId === "detect-text") {
-    const selectedText = info.selectionText
-    detectText(selectedText)
+    // 将选中的文本和弹窗创建逻辑注入到页面
+    chrome.tabs.sendMessage(tab.id, {
+      type: "showPopup",
+      text: info.selectionText
+    })
   }
 })
-
-function detectText(text) {
-  const config = {
-    data: {
-      text
-    },
-    success: (res) => {
-      console.log(res);
-    },
-  }
-  apiReqs.detect(config)
-}

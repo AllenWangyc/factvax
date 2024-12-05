@@ -40,7 +40,20 @@ export const apiReqs = {
   detect: (config) => {
     config.url = API_DOMAIN + 'detectText/'
     config.method = 'post'
-    console.log(API_DOMAIN)
+    // Create popup DOM element
+    const popup = document.createElement("div")
+    popup.id = "popup"
+    popup.innerHTML = `
+      <p><strong>Loading analysis...</strong></p>
+      <div id="popup-content">Loading...</div>
+      <button id="close-popup">Close</button>
+    `
+    document.body.appendChild(popup)
+    // Close popup 
+    document.getElementById("close-popup").onclick = () => {
+      popup.remove()
+    }
+
     apiFetch(config)
   }
 }
