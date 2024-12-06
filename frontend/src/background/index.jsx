@@ -37,7 +37,7 @@ chrome.runtime.onInstalled.addListener(() => {
 chrome.contextMenus.onClicked.addListener((info, tab) => {
 
   if (info.menuItemId === "detect-text") {
-    // 将选中的文本和弹窗创建逻辑注入到页面
+    // Inject text into selected tabs
     chrome.tabs.sendMessage(tab.id, {
       type: "showPopup",
       text: info.selectionText

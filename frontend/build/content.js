@@ -1,7 +1,7 @@
-"use strict";let a="/api/";a="http://localhost:5050/api/";const i="There is something wrong with net connection, please try again later.",l={signIn:t=>{t.url=a+"login/",t.method="post",n(t)},getData:t=>{t.url=a+"getData/",t.method="get",n(t)},detect:t=>{t.url=a+"detectText/",t.method="post";const e=document.createElement("div");e.id="popup",e.innerHTML=`
-      <p><strong>Loading analysis...</strong></p>
-      <div id="popup-content">Loading...</div>
-      <button id="close-popup">Close</button>
-    `,document.body.appendChild(e),document.getElementById("close-popup").onclick=()=>{e.remove()},n(t)}};function n(t){u(t)}function u(t){t.data===void 0&&(t.data={}),t.method=t.method||"post";let e={},s=null;t.formData?(s=new FormData,Object.keys(t.data).forEach(function(d){s.append(d,t.data([d]))})):(e["Content-Type"]="application/json;charset=UTF-8",s=JSON.stringify(t.data));let o={method:t.method,headers:e,body:s};fetch(t.url,o).then(d=>d.json()).then(d=>{t.done&&t.done(),t.success&&t.success(d)}).catch(()=>{t.done&&t.done(),t.fail&&t.fail(i)})}chrome.runtime.onMessage.addListener((t,e,s)=>{if(t.type==="showPopup"){const o={data:{text:t.text},success:d=>{const p=document.getElementById("popup-content");p.innerHTML=`
-          <div id="result">Detection result: Credible</div>
-          <div id="detection-text">Detection text: ${d.detectedText}</div>`}};l.detect(o),s({status:"success"})}});
+"use strict";let o="/api/";o="http://localhost:5050/api/";const s="There is something wrong with net connection, please try again later.",i={signIn:t=>{t.url=o+"login/",t.method="post",n(t)},getData:t=>{t.url=o+"getData/",t.method="get",n(t)},detect:t=>{t.url=o+"detectText/",t.method="post",l(),t.success=p=>{const e=document.getElementById("popup-title");e.innerText="FactVax Detection:";const a=document.getElementById("popup-content");a.innerHTML=`
+        <div id="result">Detection result: Credible</div>
+        <div id="detection-text">Detection text: ${p.detectedText}</div>`},n(t)}};function n(t){u(t)}function u(t){t.data===void 0&&(t.data={}),t.method=t.method||"post";let p={},e=null;t.formData?(e=new FormData,Object.keys(t.data).forEach(function(d){e.append(d,t.data([d]))})):(p["Content-Type"]="application/json;charset=UTF-8",e=JSON.stringify(t.data));let a={method:t.method,headers:p,body:e};fetch(t.url,a).then(d=>d.json()).then(d=>{t.done&&t.done(),t.success&&t.success(d)}).catch(()=>{t.done&&t.done(),t.fail&&t.fail(s)})}function l(){const t=document.createElement("div");t.id="popup",t.innerHTML=`
+    <div id="poopup-title-wrapper"><h2 id="popup-title">Loading analysis...</h2></div>
+    <div id="popup-content">Loading...</div>
+    <button id="close-popup">Close</button>
+  `,document.body.appendChild(t),document.getElementById("close-popup").onclick=()=>{t.remove()}}chrome.runtime.onMessage.addListener((t,p,e)=>{t.type==="showPopup"&&(i.detect({data:{text:t.text}}),e({status:"success"}))});
