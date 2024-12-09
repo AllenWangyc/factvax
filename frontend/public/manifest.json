@@ -18,9 +18,13 @@
     "storage",
     "declarativeContent",
     "contextMenus",
-    "scripting"
+    "scripting",
+    "tabs"
   ],
-  "host_permissions": ["<all_urls>"],  
+  "host_permissions": [
+    "<all_urls>",
+    "http://localhost:3000/dashboard"
+  ],  
   "web_accessible_resources": [
     {
       "resources": [

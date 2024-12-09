@@ -1,4 +1,3 @@
-// import '@/mock'
 /* global chrome */
 
 // address of required server (mock address in dev env)
@@ -26,15 +25,19 @@ export const API_FAILED = 'There is something wrong with net connection, please 
 export const apiReqs = {
   // Login
   signIn: (config) => {
-    config.url = API_DOMAIN + 'login/'
-    config.method = 'post'
-    apiFetch(config)
+    return new Promise((resolve, reject) => {
+      config.url = API_DOMAIN + 'login/'
+      config.method = 'post'
+      apiFetch(config)
+    })
   },
   // Get data
   getData: (config) => {
-    config.url = API_DOMAIN + 'getData/'
-    config.method = 'get'
-    apiFetch(config)
+    return new Promise((resolve, reject) => {
+      config.url = API_DOMAIN + 'getData/'
+      config.method = 'get'
+      apiFetch(config)
+    })
   },
   // Detect text
   detect: (config) => {
@@ -47,19 +50,6 @@ export const apiReqs = {
       }
       apiFetch(config)
     })
-    // config.url = API_DOMAIN + 'detectText/'
-    // config.method = 'post'
-
-    // config.success = (res) => {
-    //   const popupTitle = document.getElementById("popup-title")
-    //   popupTitle.innerText = 'FactVax Detection:'
-    //   const popupContent = document.getElementById("popup-content")
-    //   popupContent.innerHTML = `
-    //     <div id="result">Detection result: Credible</div>
-    //     <div id="detection-text">Explaination: ${res.data.detectedText}</div>`
-    // }
-
-    // apiFetch(config)
   }
 }
 
