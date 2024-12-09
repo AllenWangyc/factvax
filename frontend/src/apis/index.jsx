@@ -38,20 +38,28 @@ export const apiReqs = {
   },
   // Detect text
   detect: (config) => {
-    config.url = API_DOMAIN + 'detectText/'
-    config.method = 'post'
+    return new Promise((resolve, reject) => {
+      config.url = API_DOMAIN + 'detectText/'
+      config.method = 'post'
 
-    createPopup()
-    config.success = (res) => {
-      const popupTitle = document.getElementById("popup-title")
-      popupTitle.innerText = 'FactVax Detection:'
-      const popupContent = document.getElementById("popup-content")
-      popupContent.innerHTML = `
-        <div id="result">Detection result: Credible</div>
-        <div id="detection-text">Detection text: ${res.detectedText}</div>`
-    }
+      config.success = (res) => {
+        resolve(res)
+      }
+      apiFetch(config)
+    })
+    // config.url = API_DOMAIN + 'detectText/'
+    // config.method = 'post'
 
-    apiFetch(config)
+    // config.success = (res) => {
+    //   const popupTitle = document.getElementById("popup-title")
+    //   popupTitle.innerText = 'FactVax Detection:'
+    //   const popupContent = document.getElementById("popup-content")
+    //   popupContent.innerHTML = `
+    //     <div id="result">Detection result: Credible</div>
+    //     <div id="detection-text">Explaination: ${res.data.detectedText}</div>`
+    // }
+
+    // apiFetch(config)
   }
 }
 
@@ -108,20 +116,4 @@ function apiRequest(config) {
       config.done && config.done()
       config.fail && config.fail(API_FAILED)
     })
-}
-
-function createPopup() {
-  // Create popup DOM element in the content
-  const popup = document.createElement("div")
-  popup.id = "popup"
-  popup.innerHTML = `
-    <div id="poopup-title-wrapper"><h2 id="popup-title">Loading analysis...</h2></div>
-    <div id="popup-content">Loading...</div>
-    <button id="close-popup">Close</button>
-  `
-  document.body.appendChild(popup)
-  // Close popup 
-  document.getElementById("close-popup").onclick = () => {
-    popup.remove()
-  }
 }
