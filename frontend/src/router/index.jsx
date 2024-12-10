@@ -1,7 +1,7 @@
 import { Suspense, lazy } from "react"
 import { createBrowserRouter } from "react-router-dom"
 import Popup from '@/popup'
-import Layout from '@/dashboard/pages/Layout'
+import { Layout, Detection, History, Visualization } from '@/dashboard/pages'
 
 const router = createBrowserRouter([
   // Popup panel
@@ -11,8 +11,23 @@ const router = createBrowserRouter([
   },
   // Dashboard panel
   {
-    path: '/dashboard',
-    element: <Layout />
+    path: '/dashboard/',
+    element: <Layout />,
+    children: [
+      {
+        index: true,
+        element: <Detection />
+      },
+      {
+        path: 'history',
+        element: <History />
+      },
+      {
+        path: 'visualization',
+        element: <Visualization />
+      },
+    ],
+
   },
   // Login page
   {
