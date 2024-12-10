@@ -17,7 +17,8 @@
     "mockjs-fetch": "^2.0.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "react-router-dom": "^7.0.1"
+    "react-router-dom": "^7.0.1",
+    "runes2": "^1.1.4"
   },
   "devDependencies": {
     "@eslint/js": "^9.15.0",
