@@ -1,6 +1,6 @@
 /* global chrome */
 
-API_DOMAIN = 'http://localhost:5050/'
+const API_DOMAIN = 'http://localhost:5050/'
 
 export const API_CODE = {
   // API success, data success
