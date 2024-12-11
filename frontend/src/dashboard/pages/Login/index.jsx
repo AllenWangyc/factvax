@@ -1,5 +1,5 @@
 import { Typography, Button, Input } from 'antd'
-import { GoogleOutlined } from '@ant-design/icons'
+import { GoogleOutlined, GithubFilled } from '@ant-design/icons'
 import { useState } from 'react'
 import './login.styl'
 import { useNavigate } from 'react-router-dom'
@@ -14,6 +14,12 @@ const Login = () => {
     navigate('/dashboard/register')
   }
 
+  const onClickLogin = () => {
+    /**
+     * Encapulate data and invoke login API
+     */
+  }
+
   return (
     <div className="P-login">
       <div className='login-page-wrapper'>
@@ -23,7 +29,7 @@ const Login = () => {
         <div className='content-wrapper'>
           <div className='content-info-wrapper'>
             <Title level={3} className='signin-title'>Sign in</Title>
-            <p className='signin-prompt'>Enter your email and password to sign in</p>
+            <span className='signin-prompt'>Enter your email and password to sign in</span>
           </div>
           <div className='signin-content-wrapper'>
             <div className='signin-content'>
@@ -47,7 +53,7 @@ const Login = () => {
             </Button>
           </div>
           <div className='signup-prompt-wrapper'>
-            <p className='signup-prompt' onClick={onClickSignup}>Don't have an account? Sign up</p>
+            <p className='signup-prompt' onClick={onClickSignup}>Don't have an account? Sign up here</p>
           </div>
           <div className='third-party-signin-wrapper'>
             <div className='third-party-signin-prompt-wrapper'>
@@ -63,10 +69,14 @@ const Login = () => {
                 <GoogleOutlined />
                 Google
               </Button>
+              <Button className='third-party-signin-opt'
+                id='signin-google'
+                size='large'
+              >
+                <GithubFilled />
+                Github
+              </Button>
             </div>
-          </div>
-          <div className='term-info-wrapper'>
-            <p className='term-info'>By clicking signup, you agree to our Terms of Service and Privacy Policy</p>
           </div>
         </div>
       </div>
