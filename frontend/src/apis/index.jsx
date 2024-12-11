@@ -1,11 +1,6 @@
 /* global chrome */
 
-// address of required server (mock address in dev env)
-let API_DOMAIN = '/api/'
-
-if (import.meta.env.MODE === 'production') {
-  API_DOMAIN = 'http://localhost:5050/api/'
-}
+API_DOMAIN = 'http://localhost:5050/'
 
 export const API_CODE = {
   // API success, data success
@@ -26,7 +21,23 @@ export const apiReqs = {
   // Login
   signIn: (config) => {
     return new Promise((resolve, reject) => {
-      config.url = API_DOMAIN + 'login/'
+      config.url = API_DOMAIN + 'api/login/'
+      config.method = 'post'
+      apiFetch(config)
+    })
+  },
+  // Login with Google account
+  signInByGoggle: (config) => {
+    return new Promise((resolve, reject) => {
+      config.url = API_DOMAIN + 'auth/google/'
+      config.method = 'post'
+      apiFetch(config)
+    })
+  },
+  // Login with Google account
+  signInByGithub: (config) => {
+    return new Promise((resolve, reject) => {
+      config.url = API_DOMAIN + 'auth/github/'
       config.method = 'post'
       apiFetch(config)
     })
@@ -34,7 +45,7 @@ export const apiReqs = {
   // Get data
   getData: (config) => {
     return new Promise((resolve, reject) => {
-      config.url = API_DOMAIN + 'getData/'
+      config.url = API_DOMAIN + 'api/getData/'
       config.method = 'get'
       apiFetch(config)
     })
@@ -42,7 +53,7 @@ export const apiReqs = {
   // Detect text
   detect: (config) => {
     return new Promise((resolve, reject) => {
-      config.url = API_DOMAIN + 'detectText/'
+      config.url = API_DOMAIN + 'api/detectText/'
       config.method = 'post'
 
       config.success = (res) => {

@@ -50,6 +50,7 @@ const DashboardLayout = () => {
           <Avatar
             className='avatar'
             style={{ backgroundColor: avatarBgColor[colorSeed], color: avatarFontColor[colorSeed] }}
+            onClick={() => navigate('/dashboard/login')}
           >{colorSeed}</Avatar>
         </Header>
       </Layout>

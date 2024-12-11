@@ -3,6 +3,7 @@ import { GoogleOutlined, GithubFilled } from '@ant-design/icons'
 import { useState } from 'react'
 import './login.styl'
 import { useNavigate } from 'react-router-dom'
+import { apiReqs } from '@/apis'
 
 const Login = () => {
   const { Title } = Typography
@@ -18,6 +19,15 @@ const Login = () => {
     /**
      * Encapulate data and invoke login API
      */
+    apiReqs.signIn({
+      data: {
+        email,
+        password: pwd
+      },
+      success: () => {
+        navigate('/dashboard')
+      }
+    })
   }
 
   return (
@@ -48,7 +58,10 @@ const Login = () => {
                 onChange={(e) => { setPwd(e.target.value) }}
               />
             </div>
-            <Button className='signin-btn' size='large'>
+            <Button className='signin-btn'
+              size='large'
+              onClick={onClickLogin}
+            >
               Sign in
             </Button>
           </div>
