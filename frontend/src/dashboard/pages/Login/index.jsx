@@ -60,7 +60,7 @@ const Login = () => {
             </div>
             <Button className='signin-btn'
               size='large'
-              onClick={onClickLogin}
+              onClick={() => onClickLogin()}
             >
               Sign in
             </Button>

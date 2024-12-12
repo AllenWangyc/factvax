@@ -30,7 +30,7 @@ export const apiReqs = {
   signInByGoggle: (config) => {
     return new Promise((resolve, reject) => {
       config.url = API_DOMAIN + 'auth/google/'
-      config.method = 'post'
+      config.method = 'get'
       apiFetch(config)
     })
   },
@@ -38,7 +38,7 @@ export const apiReqs = {
   signInByGithub: (config) => {
     return new Promise((resolve, reject) => {
       config.url = API_DOMAIN + 'auth/github/'
-      config.method = 'post'
+      config.method = 'get'
       apiFetch(config)
     })
   },
