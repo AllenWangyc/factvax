@@ -3,9 +3,11 @@ import { LeftOutlined } from '@ant-design/icons'
 import { useState } from 'react'
 import './register.styl'
 import { useNavigate } from 'react-router-dom'
+import { apiReqs } from '@/apis'
 
 const Register = () => {
   const { Title } = Typography
+  const { Password } = Input
   const [firstName, setFirstName] = useState('')
   const [lastName, setLastName] = useState('')
   const [email, setEmail] = useState('')
@@ -16,6 +18,17 @@ const Register = () => {
     /**
      * Encapulate data and invoke signup API
      */
+    const username = firstName + ' ' + lastName
+    apiReqs.signUp({
+      data: {
+        username,
+        email,
+        password: pwd
+      },
+      success: () => {
+        navigate('/dashboard/login')
+      }
+    })
   }
 
   const onClickBack = () => {
@@ -61,7 +74,7 @@ const Register = () => {
                 value={email}
                 onChange={(e) => { setEmail(e.target.value) }}
               />
-              <Input className='signup-input'
+              <Password className='signup-input'
                 size='large'
                 placeholder='Password'
                 value={pwd}
@@ -70,7 +83,7 @@ const Register = () => {
             </div>
             <Button className='signup-btn'
               size='large'
-              onClick={onClickSignup}
+              onClick={() => onClickSignup()}
             >
               Sign up
             </Button>
