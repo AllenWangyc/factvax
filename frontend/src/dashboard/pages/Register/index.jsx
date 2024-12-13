@@ -1,4 +1,4 @@
-import { Typography, Button, Input } from 'antd'
+import { Typography, Button, Input, Form } from 'antd'
 import { LeftOutlined } from '@ant-design/icons'
 import { useState } from 'react'
 import './register.styl'
@@ -53,40 +53,89 @@ const Register = () => {
             <span className='signup-prompt'>Enter the following information to sign up</span>
           </div>
           <div className='signup-content-wrapper'>
-            <div className='signup-content'>
-              <div className='username-wrapper'>
-                <Input className='username'
-                  size='large'
-                  placeholder='First name'
-                  value={firstName}
-                  onChange={(e) => { setFirstName(e.target.value) }}
-                />
-                <Input className='username'
-                  size='large'
-                  placeholder='Last name'
-                  value={lastName}
-                  onChange={(e) => { setLastName(e.target.value) }}
-                />
-              </div>
-              <Input className='signup-input'
-                size='large'
-                placeholder='Email'
-                value={email}
-                onChange={(e) => { setEmail(e.target.value) }}
-              />
-              <Password className='signup-input'
-                size='large'
-                placeholder='Password'
-                value={pwd}
-                onChange={(e) => { setPwd(e.target.value) }}
-              />
-            </div>
-            <Button className='signup-btn'
-              size='large'
-              onClick={() => onClickSignup()}
+            <Form className='signup-content-form'
+              name="register"
+              layout="vertical"
+              onFinish={onClickSignup}
             >
-              Sign up
-            </Button>
+              <div className='username-wrapper'>
+                <Form.Item className='username-form-item'
+                  label="First Name"
+                  name="firstName"
+                  rules={[
+                    {
+                      required: true,
+                      message: 'First name is required.',
+                    },
+                    {
+                      pattern: /^[a-zA-Z]+$/,
+                      message: 'First name should only contain letters.',
+                    },
+                  ]}
+                >
+                  <Input className='username' size='large' placeholder='First name' value={firstName} onChange={(e) => { setFirstName(e.target.value) }} />
+                </Form.Item>
+
+                <Form.Item
+                  className='username-form-item'
+                  label="Last Name"
+                  name="lastName"
+                  rules={[
+                    {
+                      required: true,
+                      message: 'Last name is required.',
+                    },
+                    {
+                      pattern: /^[a-zA-Z]+$/,
+                      message: 'Last name should only contain letters.',
+                    },
+                  ]}
+                >
+                  <Input className='username' size='large' placeholder='Last name' value={lastName} onChange={(e) => { setLastName(e.target.value) }} />
+                </Form.Item>
+              </div>
+
+              <Form.Item className='signup-input-item'
+                label="Email"
+                name="email"
+                rules={[
+                  {
+                    required: true,
+                    message: 'Email is required.',
+                  },
+                  {
+                    pattern: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+                    message: 'Please enter a valid email address.',
+                  },
+                ]}
+              >
+                <Input className='signup-input' size='large' placeholder='e.g. exapmle@gmail.com' value={email} onChange={(e) => { setEmail(e.target.value) }} />
+              </Form.Item>
+
+              <Form.Item
+                className='signup-input-item'
+                label="Password"
+                name="password"
+                rules={[
+                  {
+                    required: true,
+                    message: 'Password is required.',
+                  },
+                  {
+                    pattern: /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/,
+                    message: 'Password must be at least 8 characters long and include both letters and numbers.',
+                  },
+                ]}
+              >
+                <Password className='signup-input' size='large' placeholder='At least 8 characters, including both letters and numbers.' value={pwd} onChange={(e) => { setPwd(e.target.value) }} />
+              </Form.Item>
+
+              <Form.Item className='signup-btn-item'>
+                <Button className='signup-btn' size='large' type="primary" htmlType="submit">
+                  Sign up
+                </Button>
+              </Form.Item>
+            </Form>
           </div>
           <div className='term-info-wrapper'>
             <span className='term-info'>By clicking signup, you agree to our Terms of Service and Privacy Policy</span>
