@@ -30,6 +30,22 @@ const Login = () => {
     })
   }
 
+  const onClickGoogleLogin = () => {
+    apiReqs.signInByGoggle({
+      success: () => {
+        navigate('/dashboard')
+      }
+    })
+  }
+
+  const onClickGithubLogin = () => {
+    apiReqs.signInByGithub({
+      success: () => {
+        navigate('/dashboard')
+      }
+    })
+  }
+
   return (
     <div className="P-login">
       <div className='login-page-wrapper'>
@@ -78,6 +94,7 @@ const Login = () => {
               <Button className='third-party-signin-opt'
                 id='signin-google'
                 size='large'
+                onClick={onClickGoogleLogin}
               >
                 <GoogleOutlined />
                 Google
@@ -85,6 +102,7 @@ const Login = () => {
               <Button className='third-party-signin-opt'
                 id='signin-google'
                 size='large'
+                onClick={onClickGithubLogin}
               >
                 <GithubFilled />
                 Github

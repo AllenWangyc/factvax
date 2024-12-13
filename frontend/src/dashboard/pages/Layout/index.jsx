@@ -1,5 +1,5 @@
 import { Avatar, Layout, Menu, Popconfirm } from 'antd'
-import { HomeOutlined } from '@ant-design/icons'
+import { HomeOutlined, SearchOutlined, HistoryOutlined, LineChartOutlined } from '@ant-design/icons'
 import './layout.styl'
 import { useNavigate, useLocation, Outlet } from 'react-router-dom'
 
@@ -7,17 +7,17 @@ const items = [
   {
     label: 'Detection',
     key: '/dashboard',
-    icon: <HomeOutlined />
+    icon: <SearchOutlined />
   },
   {
     label: 'History',
     key: '/dashboard/history',
-    icon: <HomeOutlined />
+    icon: <HistoryOutlined />
   },
   {
     label: 'Visualization',
     key: '/dashboard/visualization',
-    icon: <HomeOutlined />
+    icon: <LineChartOutlined />
   }
 ]
 
@@ -56,7 +56,7 @@ const DashboardLayout = () => {
       </Layout>
       <Layout className='main-layout'>
         <Sider className='sider'>
-          <Menu
+          <Menu className='menu'
             mode='inline'
             items={items} // Add items to Menu bar
             selectedKeys={selectedKey} // Show which item is selected
