@@ -53,9 +53,9 @@ export const apiReqs = {
     })
   },
   // Get data
-  getData: (config) => {
+  getHiesory: (config) => {
     return new Promise((resolve, reject) => {
-      config.url = API_DOMAIN + 'api/getData/'
+      config.url = API_DOMAIN + 'api/getHistory/'
       config.method = 'get'
       apiFetch(config)
     })

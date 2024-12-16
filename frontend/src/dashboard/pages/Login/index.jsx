@@ -100,7 +100,7 @@ const Login = () => {
                 Google
               </Button>
               <Button className='third-party-signin-opt'
-                id='signin-google'
+                id='signin-github'
                 size='large'
                 onClick={onClickGithubLogin}
               >

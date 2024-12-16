@@ -109,7 +109,7 @@ const Register = () => {
                   },
                 ]}
               >
-                <Input className='signup-input' size='large' placeholder='e.g. exapmle@gmail.com' value={email} onChange={(e) => { setEmail(e.target.value) }} />
+                <Input className='signup-input' size='large' placeholder='e.g. example@gmail.com' value={email} onChange={(e) => { setEmail(e.target.value) }} />
               </Form.Item>
 
               <Form.Item

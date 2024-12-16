@@ -16,3 +16,8 @@ const userStore = createSlice({
   }
 })
 
+const { setUsername, increaseDetectCounter } = userStore.actions
+
+const userReducer = userStore.reducer
+
+export default userReducer
