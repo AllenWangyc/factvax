@@ -4,30 +4,32 @@ import { useState } from 'react'
 import './login.styl'
 import { useNavigate } from 'react-router-dom'
 import { apiReqs } from '@/apis'
+import { useDispatch } from 'react-redux'
+import { fetchLogin, setColorSeed } from '@/store/modules/user'
 
 const Login = () => {
   const { Title } = Typography
+  const { Password } = Input
   const [email, setEmail] = useState('')
   const [pwd, setPwd] = useState('')
   const navigate = useNavigate()
+  const dispatch = useDispatch()
 
   const onClickSignup = () => {
     navigate('/dashboard/register')
   }
 
-  const onClickLogin = () => {
+  const onClickLogin = async () => {
     /**
      * Encapulate data and invoke login API
      */
-    apiReqs.signIn({
-      data: {
-        email,
-        password: pwd
-      },
-      success: () => {
-        navigate('/dashboard')
-      }
-    })
+    const loginForm = {
+      email,
+      password: pwd
+    }
+    await dispatch(fetchLogin(loginForm))
+    dispatch(setColorSeed())
+    navigate('/dashboard')
   }
 
   const onClickGoogleLogin = () => {
@@ -66,7 +68,7 @@ const Login = () => {
                 value={email}
                 onChange={(e) => { setEmail(e.target.value) }}
               />
-              <Input
+              <Password
                 className='signin-input'
                 size='large'
                 placeholder='Password'
@@ -76,7 +78,7 @@ const Login = () => {
             </div>
             <Button className='signin-btn'
               size='large'
-              onClick={() => onClickLogin()}
+              onClick={onClickLogin}
             >
               Sign in
             </Button>

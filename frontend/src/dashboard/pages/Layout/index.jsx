@@ -2,6 +2,8 @@ import { Avatar, Layout, Menu, Popconfirm } from 'antd'
 import { HomeOutlined, SearchOutlined, HistoryOutlined, LineChartOutlined } from '@ant-design/icons'
 import './layout.styl'
 import { useNavigate, useLocation, Outlet } from 'react-router-dom'
+import { useSelector, useDispatch } from 'react-redux'
+import { logout } from '@/store/modules/user'
 
 const items = [
   {
@@ -28,19 +30,36 @@ const DashboardLayout = () => {
   const { Header, Sider, Content } = Layout
   const navigate = useNavigate()
   const location = useLocation()
+  const { username, colorSeed } = useSelector(state => state.user)
+  const dispatch = useDispatch()
+
   // Get the current pathname
   const selectedKey = location.pathname
 
   // Randomly generate color assortment of avatar font color and bg color
-  const randomPickColor = () => Math.floor(Math.random() * 10)
-  const colorSeed = randomPickColor()
 
   /**
    * 
-   * @param {object} route, An object that has all properties of the clickede menu item.
+   * @param {Object} route, An object that has all properties of the clickede menu item.
    */
   const onMenuClick = (route) => {
     navigate(route.key)
+  }
+
+  /**
+   * 
+   * @param {String} username, username stored in global state
+   * @returns {String} A new string that consists of the first letter of each word in the username
+   */
+  const getInitialsFromUsername = (username) => {
+    return username.split(' ')
+      .map(word => word.charAt(0).toUpperCase())
+      .join('')
+  }
+
+  const handleLogout = () => {
+    dispatch(logout())
+    navigate('/dashboard/login')
   }
 
   return (
@@ -50,8 +69,8 @@ const DashboardLayout = () => {
           <Avatar
             className='avatar'
             style={{ backgroundColor: avatarBgColor[colorSeed], color: avatarFontColor[colorSeed] }}
-            onClick={() => navigate('/dashboard/login')}
-          >{colorSeed}</Avatar>
+            onClick={handleLogout}
+          >{getInitialsFromUsername(username)}</Avatar>
         </Header>
       </Layout>
       <Layout className='main-layout'>

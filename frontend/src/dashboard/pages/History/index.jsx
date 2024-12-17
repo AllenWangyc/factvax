@@ -3,6 +3,15 @@ import { DeleteOutlined, SearchOutlined, FilterOutlined } from "@ant-design/icon
 import { useEffect, useState } from "react"
 import './history.styl'
 import { useNavigate } from "react-router-dom"
+import classNames from "classnames"
+
+/**
+ * API needed
+ * 1. Fetch all records
+ * 2. Fetch records according to searching text
+ * 3. Fetch records according to date, source, result
+ * 4. Delete the specific record
+ */
 
 const resultComponent = {
   'true': <Tag color="green">True</Tag>,
@@ -47,6 +56,10 @@ const sources = [
   {
     label: 'Meta',
     value: 'meta'
+  },
+  {
+    label: 'Reddit',
+    value: 'reddit'
   }
 ]
 
@@ -63,22 +76,22 @@ const results = [
 
 const History = () => {
   const { RangePicker } = DatePicker
+  const navigate = useNavigate()
   const [recordList, setRecordList] = useState([])
   const [searchText, setSearchText] = useState('') // Using as a param that fetch filtered record list
   const [typingText, setTypingText] = useState('') // Using for sync with searching input value
-
-  const [source, setSource] = useState('') // Filter condition
-  const [result, setResult] = useState('') // Filter condition
-  const [startDate, setStartDate] = useState(null) // Filter condition
-  const [endDate, setEndDate] = useState(null) // Filter condition
   const [isFilterActive, setIsFilterActive] = useState(false)
-  const navigate = useNavigate()
+  const [reqData, setReqData] = useState({
+    dates: [],
+    source: '',
+    result: ''
+  })
+
 
   // Handle with press Enter on the search box
   const handleSearch = (e) => {
     if (e.key === 'Enter') {
       setSearchText(e.target.value)
-      console.log('handleSearch worked!')
       setTypingText('')
     }
   }
@@ -89,12 +102,22 @@ const History = () => {
   }
 
   // Handle with click filter button
-  const handleFilter = () => {
+  const handleFilterFinish = (formData) => {
     /**
      * Invoke getRecordList API and re-fetch the list, reset all states
+     * @param {Array} formData.dayjs
+     * A list consists of 2 dayjs elements, [0] is start date and [1] is end date
      */
-    setSource('')
-    setResult('')
+    const startDate = formData.dates[0].format('MMM D, YYYY')
+    const endDate = formData.dates[1].format('MMM D, YYYY')
+
+    setReqData({
+      ...reqData,
+      dates: [startDate, endDate] || [],
+      source: formData.source || '',
+      result: formData.result || ''
+    })
+
     handleToggleFilter()
   }
 
@@ -179,27 +202,27 @@ const History = () => {
               />
             </div>
             <div className="filter-container">
-              <FilterOutlined className="filter" size='large' onClick={handleToggleFilter} />
+              <div className="filter-wrapper">
+                <FilterOutlined className={classNames('filter', { 'filter-active': isFilterActive })} size='large' onClick={handleToggleFilter} />
+              </div>
             </div>
           </div>
           {isFilterActive && (
-            <Form className="filter-form" onFinish={handleFilter}>
+            <Form className="filter-form" onFinish={(data) => handleFilterFinish(data)}>
               <div className="filter-form-item-wrapper">
-                <Form.Item className="filter-form-date" label='Date' name='date' layout="vertical">
-                  <RangePicker />
+                <Form.Item className="filter-form-date" label='Date' name='dates' layout="vertical">
+                  <RangePicker className="filter-form-datepicker" />
                 </Form.Item>
                 <Form.Item className="filter-form-source" label='Source' name='source' layout="vertical">
                   <Select
                     placeholder='Select the source'
                     options={sources}
-                    onChange={(value) => setSource(value)}
                   />
                 </Form.Item>
                 <Form.Item className="filter-form-result" label='Result' name='result' layout="vertical">
                   <Select
                     placeholder='Select the result'
                     options={results}
-                    onChange={(value) => setResult(value)}
                   />
                 </Form.Item>
               </div>

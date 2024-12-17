@@ -25,6 +25,9 @@ export const apiReqs = {
     return new Promise((resolve, reject) => {
       config.url = API_DOMAIN + 'api/login/'
       config.method = 'post'
+      config.success = (res) => {
+        resolve(res)
+      }
       apiFetch(config)
     })
   },
@@ -49,6 +52,9 @@ export const apiReqs = {
     return new Promise((resolve, reject) => {
       config.url = API_DOMAIN + 'api/register/'
       config.method = 'post'
+      config.success = (res) => {
+        resolve(res)
+      }
       apiFetch(config)
     })
   },
