@@ -1,10 +1,12 @@
 import './detection.styl'
-import { Input, Typography, ConfigProvider } from "antd"
+import { Input, Typography, ConfigProvider, Button } from "antd"
+import { useNavigate } from 'react-router-dom'
 import { runes } from 'runes2'
 
 const Detection = () => {
   const { TextArea } = Input
   const { Title } = Typography
+  const navigate = useNavigate()
 
   return (
     <div className="P-detection">
@@ -37,7 +39,26 @@ const Detection = () => {
               autoSize={{ minRows: 8, maxRows: 20 }}
             />
           </ConfigProvider>
-
+        </div>
+        <div className='detect-btn-container'>
+          <ConfigProvider
+            theme={{
+              components: {
+                Button: {
+                  defaultBg: '#e6f4ff',
+                  defaultColor: '#4081ff',
+                  defaultBorderColor: '#4081ff'
+                },
+              },
+            }}
+          >
+            <Button className='detect-btn'
+              size='large'
+              onClick={() => navigate('/dashboard/result')}
+            >
+              Detect
+            </Button>
+          </ConfigProvider>
         </div>
       </div>
     </div>

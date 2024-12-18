@@ -1,0 +1,86 @@
+.P-result
+  width 100%
+  height 100%
+  margin 0
+  font-family Arial, sans-serif
+  // background-color #f8f9fa
+  background-color #fff
+
+  .page-container
+    display flex
+    height 100%
+    width 100%
+    flex-direction column
+    justify-content center
+    align-items center
+    // overflow: auto
+
+    .header
+      text-align: center
+
+    .result-section-wrapper
+      display: flex
+      width 50%
+      flex-direction: column
+      justify-content center
+      gap: 16px
+
+      .result-card
+        width 100%
+
+        .result-content
+          .detection-text-wrapper
+            margin-bottom: 3%
+
+            .detection-text
+              font-size: 16px
+
+          .result-status-wrapper
+            display: flex
+            flex-direction: column
+            margin-bottom: 3%
+
+            .result-status-content-container
+              display: flex
+
+              .credible-icon
+                font-size: 18px
+
+              .result-status-wrapper
+                display: flex
+                margin-left: 5px
+                margin-bottom: 0
+                align-content: center
+
+                .result-status
+                  font-size: 18px
+                  color: #6acc39
+
+          .result-explanation-wrapper
+            margin-bottom: 3%
+
+            .result-explanation
+              font-size: 16px
+
+        .line
+          flex: 1;
+          border none
+          border-bottom: 1px solid #ccc
+          margin: 0 1rem
+
+        .timestamp-wrapper
+          margin-top: 2%
+
+      .detailed-info-container
+        width 100%
+
+        .detailed-info-content-container
+          .detailed-info-item-wrapper
+            margin-top: 2%
+
+            .detailed-info-item
+              font-size: 16px
+
+    .btn-container
+      margin-top: 2%
+      margin-bottom: 5%

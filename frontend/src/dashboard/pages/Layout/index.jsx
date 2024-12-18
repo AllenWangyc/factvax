@@ -1,5 +1,5 @@
 import { Avatar, Layout, Menu, Popconfirm } from 'antd'
-import { HomeOutlined, SearchOutlined, HistoryOutlined, LineChartOutlined } from '@ant-design/icons'
+import { HomeOutlined, SearchOutlined, HistoryOutlined, LineChartOutlined, UserOutlined } from '@ant-design/icons'
 import './layout.styl'
 import { useNavigate, useLocation, Outlet } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
@@ -36,6 +36,8 @@ const DashboardLayout = () => {
   // Get the current pathname
   const selectedKey = location.pathname
 
+  const token = useSelector(state => state.user.token)
+
   // Randomly generate color assortment of avatar font color and bg color
 
   /**
@@ -66,11 +68,18 @@ const DashboardLayout = () => {
     <div className="P-layout-wrapper">
       <Layout className='header-layout'>
         <Header className='header'>
-          <Avatar
-            className='avatar'
-            style={{ backgroundColor: avatarBgColor[colorSeed], color: avatarFontColor[colorSeed] }}
-            onClick={handleLogout}
-          >{getInitialsFromUsername(username)}</Avatar>
+          {token ?
+            <Avatar
+              className='avatar'
+              style={{ backgroundColor: avatarBgColor[colorSeed], color: avatarFontColor[colorSeed] }}
+              onClick={handleLogout}
+            >
+              {getInitialsFromUsername(username)}
+            </Avatar> :
+            <Avatar className='avatar'
+              onClick={handleLogout}
+              icon={<UserOutlined />}
+            />}
         </Header>
       </Layout>
       <Layout className='main-layout'>

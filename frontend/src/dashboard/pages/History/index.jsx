@@ -226,7 +226,6 @@ const History = () => {
                   />
                 </Form.Item>
               </div>
-
               <ConfigProvider
                 theme={{
                   components: {
