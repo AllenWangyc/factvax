@@ -1,5 +1,5 @@
 import { Avatar, Layout, Menu, Popconfirm } from 'antd'
-import { HomeOutlined, SearchOutlined, HistoryOutlined, LineChartOutlined, UserOutlined } from '@ant-design/icons'
+import { SearchOutlined, HistoryOutlined, LineChartOutlined, UserOutlined } from '@ant-design/icons'
 import './layout.styl'
 import { useNavigate, useLocation, Outlet } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
@@ -36,6 +36,7 @@ const DashboardLayout = () => {
   // Get the current pathname
   const selectedKey = location.pathname
 
+  // Use token for checking if user has login
   const token = useSelector(state => state.user.token)
 
   // Randomly generate color assortment of avatar font color and bg color
@@ -69,17 +70,27 @@ const DashboardLayout = () => {
       <Layout className='header-layout'>
         <Header className='header'>
           {token ?
-            <Avatar
-              className='avatar'
-              style={{ backgroundColor: avatarBgColor[colorSeed], color: avatarFontColor[colorSeed] }}
-              onClick={handleLogout}
-            >
-              {getInitialsFromUsername(username)}
-            </Avatar> :
-            <Avatar className='avatar'
-              onClick={handleLogout}
-              icon={<UserOutlined />}
-            />}
+            <div className='status-container'>
+              <div className='log-opt-wrapper'>
+                <span className='log-opt' onClick={handleLogout}>Logout</span>
+              </div>
+              <Avatar
+                className='avatar'
+                style={{ backgroundColor: avatarBgColor[colorSeed], color: avatarFontColor[colorSeed] }}
+              >
+                {getInitialsFromUsername(username)}
+              </Avatar>
+            </div>
+            :
+            <div className='status-container'>
+              <div className='log-opt-wrapper'>
+                <span className='log-opt' onClick={handleLogout}>Login</span>
+              </div>
+              <Avatar className='avatar'
+                icon={<UserOutlined />}
+              />
+            </div>
+          }
         </Header>
       </Layout>
       <Layout className='main-layout'>

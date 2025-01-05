@@ -1,17 +1,19 @@
-import { Typography, Button, Input } from 'antd'
+import { Typography, Button, Input, Form, message } from 'antd'
 import { GoogleOutlined, GithubFilled } from '@ant-design/icons'
 import { useState } from 'react'
 import './login.styl'
 import { useNavigate } from 'react-router-dom'
-import { apiReqs } from '@/apis'
+import { apiReqs, loginAPI } from '@/apis'
 import { useDispatch } from 'react-redux'
 import { fetchLogin, setColorSeed } from '@/store/modules/user'
 
 const Login = () => {
   const { Title } = Typography
   const { Password } = Input
+  const { Item } = Form
   const [email, setEmail] = useState('')
   const [pwd, setPwd] = useState('')
+  const [loginError, setLoginError] = useState(false)
   const navigate = useNavigate()
   const dispatch = useDispatch()
 
@@ -27,9 +29,16 @@ const Login = () => {
       email,
       password: pwd
     }
-    await dispatch(fetchLogin(loginForm))
-    dispatch(setColorSeed())
-    navigate('/dashboard')
+    try {
+      await dispatch(fetchLogin(loginForm))
+      dispatch(setColorSeed())
+      message.success('Log in successfully!')
+      navigate('/dashboard')
+    }
+    catch (error) {
+      setLoginError(true)
+      message.error('Log in failed. Please try again.')
+    }
   }
 
   const onClickGoogleLogin = () => {
@@ -60,28 +69,52 @@ const Login = () => {
             <span className='signin-prompt'>Enter your email and password to sign in</span>
           </div>
           <div className='signin-content-wrapper'>
-            <div className='signin-content'>
-              <Input
-                className='signin-input'
-                size='large'
-                placeholder='Email'
-                value={email}
-                onChange={(e) => { setEmail(e.target.value) }}
-              />
-              <Password
-                className='signin-input'
-                size='large'
-                placeholder='Password'
-                value={pwd}
-                onChange={(e) => { setPwd(e.target.value) }}
-              />
-            </div>
-            <Button className='signin-btn'
-              size='large'
-              onClick={onClickLogin}
+            <Form className='signin-content'
+              onFinish={onClickLogin}
             >
-              Sign in
-            </Button>
+              <Item className='signin-input-item'
+                name='email'
+                rules={[{ required: true, message: 'Please enter your email!' }, { type: 'email', message: 'Enter a valid email!' }]}
+              >
+                <Input
+                  className='signin-input'
+                  size='large'
+                  placeholder='Email'
+                  value={email}
+                  onChange={(e) => {
+                    setEmail(e.target.value)
+                    setLoginError(false)
+                  }}
+                />
+              </Item>
+              <Item className='signin-input-item'
+                name='password'
+                rules={[{ required: true, message: 'Please enter your password!' }]}
+              >
+                <Password
+                  className='signin-input'
+                  size='large'
+                  placeholder='Password'
+                  value={pwd}
+                  onChange={(e) => {
+                    setPwd(e.target.value)
+                    setLoginError(false)
+                  }}
+                />
+              </Item>
+              {loginError && (
+                <div className='error-message'>Email and password do not match</div>
+              )}
+              <Item>
+                <Button className='signin-btn'
+                  size='large'
+                  htmlType='submit'
+                >
+                  Sign in
+                </Button>
+              </Item>
+            </Form>
+
           </div>
           <div className='signup-prompt-wrapper'>
             <p className='signup-prompt' onClick={onClickSignup}>Don't have an account? Sign up here</p>

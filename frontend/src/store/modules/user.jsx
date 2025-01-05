@@ -4,7 +4,7 @@ import {
   setUsername as _setUsername, getUsername, removeUsername,
   setColorSeed as _setColorSeed, getColorSeed, removeColorSeed
 } from '@/utils'
-import { apiReqs } from '@/apis'
+import { apiReqs, loginAPI } from '@/apis'
 
 const { signIn } = apiReqs
 
@@ -48,11 +48,7 @@ const { setUsername, setToken, setColorSeed, increaseDetectCounter, logout } = u
 
 const fetchLogin = (loginForm) => {
   return async (dispatch) => {
-    const config = {
-      data: loginForm
-    }
-
-    const res = await signIn(config)
+    const res = await loginAPI(loginForm)
     dispatch(setToken(res.data.token))
     dispatch(setUsername(res.data.username))
   }

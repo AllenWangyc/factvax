@@ -1,9 +1,9 @@
-import { Typography, Button, Input, Form } from 'antd'
+import { Typography, Button, Input, Form, message } from 'antd'
 import { LeftOutlined } from '@ant-design/icons'
 import { useState } from 'react'
 import './register.styl'
 import { useNavigate } from 'react-router-dom'
-import { apiReqs } from '@/apis'
+import { apiReqs, signUpAPI } from '@/apis'
 
 const Register = () => {
   const { Title } = Typography
@@ -19,16 +19,23 @@ const Register = () => {
      * Encapulate data and invoke signup API
      */
     const username = firstName + ' ' + lastName
-    apiReqs.signUp({
-      data: {
-        username,
-        email,
-        password: pwd
-      },
-      success: () => {
-        navigate('/dashboard/login')
-      }
-    })
+    const formData = {
+      username,
+      email,
+      password: pwd
+    }
+    signUpAPI(formData)
+      .then((res) => {
+        if (res && res.success) {
+          message.success('Sign up successfully!')
+          navigate('/dashboard/login') // Redirect only after success
+        } else {
+          message.error('Sign up failed. Please try again.')
+        }
+      })
+      .catch(() => {
+        message.error('An error occurred during sign up. Please try again.')
+      })
   }
 
   const onClickBack = () => {

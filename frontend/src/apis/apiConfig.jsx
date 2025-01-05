@@ -38,7 +38,7 @@ function apiRequest(config) {
   let axiosConfig = {
     method: config.method,
     headers,
-    body: data,
+    ...(config.method.toLowerCase() === 'get' ? {} : { body: data }),
   }
 
   fetch(config.url, axiosConfig)

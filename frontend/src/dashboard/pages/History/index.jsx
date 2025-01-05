@@ -4,6 +4,7 @@ import { useEffect, useState } from "react"
 import './history.styl'
 import { useNavigate } from "react-router-dom"
 import classNames from "classnames"
+import { apiReqs } from "@/apis"
 
 /**
  * API needed
@@ -23,30 +24,6 @@ const onConfirm = (config) => {
    * Using for delete the specific record when click the delete button 
    */
 }
-
-const dataSource = [
-  {
-    id: 1,
-    date: 'Dec 5',
-    text: 'Multiple large-scale studies have shown no link between vaccines and autism.',
-    source: 'X',
-    result: 'true'
-  },
-  {
-    id: 2,
-    date: 'Dec 5',
-    text: 'COVID-19 vaccines do not contain microchips. They are designed to protect against the virus by teaching your immune system to recognize it.',
-    source: 'X',
-    result: 'true'
-  },
-  {
-    id: 3,
-    date: 'Dec 5',
-    text: 'COVID-19 vaccines contain microchips to track people.',
-    source: 'Meta',
-    result: 'false'
-  }
-]
 
 const sources = [
   {
@@ -178,11 +155,17 @@ const History = () => {
 
   // Hard coding
   useEffect(() => {
-    function getRecordList() {
-      setRecordList(dataSource)
+    async function getRecordList() {
+      const config = {
+        data: {
+          userid: 'wany723'
+        }
+      }
+      const res = await apiReqs.getHistory(config)
+      setRecordList(res.data.dataSource)
     }
     getRecordList()
-  })
+  }, [])
 
   return (
     <div className="P-history">

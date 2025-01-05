@@ -1,6 +1,7 @@
 /* global chrome */
 
 import { apiFetch } from '@/apis/apiConfig.jsx'
+import { request } from '@/utils'
 
 const API_DOMAIN = 'http://localhost:5050/'
 
@@ -77,5 +78,37 @@ export const apiReqs = {
       }
       apiFetch(config)
     })
+  },
+  // Fetch all history records
+  getHistory: (config) => {
+    return new Promise((resolve, reject) => {
+      config.url = API_DOMAIN + 'api/history/user_history'
+      config.method = 'get'
+
+      config.success = (res) => {
+        resolve(res)
+      }
+      apiFetch(config)
+    })
   }
+}
+
+export function signUpAPI(formData) {
+  return request({
+    url: '/api/register/',
+    method: 'POST',
+    data: {
+      data: formData
+    }
+  })
+}
+
+export function loginAPI(formData) {
+  return request({
+    url: '/api/login/',
+    method: 'POST',
+    data: {
+      data: formData
+    }
+  })
 }

@@ -36,7 +36,7 @@ const Detection = () => {
                 height: 120,
                 resize: 'none',
               }}
-              autoSize={{ minRows: 8, maxRows: 20 }}
+              autoSize={{ minRows: 8, maxRows: 10 }}
             />
           </ConfigProvider>
         </div>
