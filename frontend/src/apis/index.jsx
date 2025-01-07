@@ -93,22 +93,42 @@ export const apiReqs = {
   }
 }
 
+export function historyFetchAPI() {
+  return request({
+    url: `/api/history/user_history`,
+    method: 'GET'
+  })
+}
+
 export function signUpAPI(formData) {
   return request({
-    url: '/api/register/',
+    url: '/register/',
     method: 'POST',
-    data: {
-      data: formData
-    }
+    data: formData
   })
 }
 
 export function loginAPI(formData) {
   return request({
-    url: '/api/login/',
+    url: '/login/',
+    method: 'POST',
+    data: formData
+  })
+}
+
+export function detectAPI(text) {
+  return request({
+    url: '/api/detect_text/',
     method: 'POST',
     data: {
-      data: formData
+      text
     }
+  })
+}
+
+export function deleteRecordAPI(id) {
+  return request({
+    url: `/api/history/delete_record/${id}`,
+    method: 'DELETE',
   })
 }

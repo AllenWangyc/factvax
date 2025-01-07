@@ -29,6 +29,7 @@ const Login = () => {
       email,
       password: pwd
     }
+
     try {
       await dispatch(fetchLogin(loginForm))
       dispatch(setColorSeed())

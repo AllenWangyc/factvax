@@ -4,16 +4,18 @@ import {
   setUsername as _setUsername, getUsername, removeUsername,
   setColorSeed as _setColorSeed, getColorSeed, removeColorSeed
 } from '@/utils'
-import { apiReqs, loginAPI } from '@/apis'
+import { loginAPI } from '@/apis'
 
-const { signIn } = apiReqs
+const cookies = document.cookie.split('; ');
+const userDataCookie = cookies.find(cookie => cookie.startsWith('user_data='));
+const userData = userDataCookie ? userDataCookie.split('=')[1] : null;
 
 const userStore = createSlice({
   name: 'user',
   initialState: {
     username: getUsername() || '',
     token: getToken() || '',
-    colorSeed: getColorSeed() || -1, // Use for Setting avator's color and bg color, value from [0, 9]
+    colorSeed: getColorSeed() || -1, // Use for Setting avator's color and bg color, the value from [0, 9]
     detectCounter: 0,
   },
   reducers: {
@@ -49,8 +51,12 @@ const { setUsername, setToken, setColorSeed, increaseDetectCounter, logout } = u
 const fetchLogin = (loginForm) => {
   return async (dispatch) => {
     const res = await loginAPI(loginForm)
-    dispatch(setToken(res.data.token))
-    dispatch(setUsername(res.data.username))
+    if (res.token) {
+      dispatch(setToken(res.token))
+    }
+    if (res.username) {
+      dispatch(setUsername(res.username))
+    }
   }
 }
 

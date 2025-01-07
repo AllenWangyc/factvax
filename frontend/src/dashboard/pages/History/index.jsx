@@ -1,28 +1,23 @@
-import { Table, Card, Tag, Space, Popconfirm, Button, Input, DatePicker, Form, Select, ConfigProvider } from "antd"
+import { Table, Card, Tag, Space, Popconfirm, Button, Input, DatePicker, Form, Select, ConfigProvider, Tooltip } from "antd"
 import { DeleteOutlined, SearchOutlined, FilterOutlined } from "@ant-design/icons"
 import { useEffect, useState } from "react"
 import './history.styl'
 import { useNavigate } from "react-router-dom"
 import classNames from "classnames"
-import { apiReqs } from "@/apis"
+import { historyFetchAPI, deleteRecordAPI } from "@/apis"
+import dayjs from "dayjs"
 
 /**
  * API needed
- * 1. Fetch all records
+ * 1. Fetch all records √
  * 2. Fetch records according to searching text
  * 3. Fetch records according to date, source, result
- * 4. Delete the specific record
+ * 4. Delete the specific record √
  */
 
 const resultComponent = {
-  'true': <Tag color="green">True</Tag>,
-  'false': <Tag color="red">False</Tag>
-}
-
-const onConfirm = (config) => {
-  /**
-   * Using for delete the specific record when click the delete button 
-   */
+  'accurate': <Tag color="green">True</Tag>,
+  'misinformation': <Tag color="red">False</Tag>
 }
 
 const sources = [
@@ -101,9 +96,10 @@ const History = () => {
   const columns = [
     {
       title: 'Date',
-      dataIndex: 'date',
-      key: 'date',
+      dataIndex: 'created_at',
+      key: 'created_at',
       // render: process Date object to make it show in this format: Mon Date e.g. Dec 5
+      render: date => dayjs(date).format("YYYY-MM-DD HH:mm")
     },
     {
       title: 'Text',
@@ -112,9 +108,23 @@ const History = () => {
       // render: process the text to make it navigate to the specific detection result page
       render: (text) => {
         return (
-          <span className="record-item-text" onClick={() => { navigate('/dashboard') }}>{text}</span>
+          // <span  >{text}</span>
+          <Tooltip title={text}>
+            <div
+              className="record-item-text"
+              onClick={() => { navigate('/dashboard') }}
+              style={{
+                width: '800px',
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                whiteSpace: "nowrap",
+              }}
+            >
+              {text}
+            </div>
+          </Tooltip>
         )
-      }
+      },
     },
     {
       title: 'Source',
@@ -125,7 +135,7 @@ const History = () => {
       title: 'Result',
       dataIndex: 'result',
       key: 'result',
-      render: result => resultComponent[result]
+      render: result => resultComponent[result.classification],
     },
     {
       title: 'Action',
@@ -149,23 +159,28 @@ const History = () => {
             </Popconfirm>
           </Space>
         )
-      }
+      },
     }
   ]
 
-  // Hard coding
   useEffect(() => {
     async function getRecordList() {
-      const config = {
-        data: {
-          userid: 'wany723'
-        }
-      }
-      const res = await apiReqs.getHistory(config)
-      setRecordList(res.data.dataSource)
+      const res = await historyFetchAPI()
+      setRecordList(res.history) // need to check property name
     }
     getRecordList()
-  }, [])
+
+  }, [reqData])
+
+  const onConfirm = async (data) => {
+    /**
+     * Using for delete the specific record when click the delete button 
+     */
+    await deleteRecordAPI(data._id)
+    setReqData({
+      ...reqData
+    })
+  }
 
   return (
     <div className="P-history">
@@ -234,7 +249,7 @@ const History = () => {
       <Card className="record-list-container"
         title={`${recordList.length} records are found:`}
       >
-        <Table rowKey='id' className="record-list-table" columns={columns} dataSource={recordList} />
+        <Table rowKey={record => record._id} className="record-list-table" columns={columns} dataSource={recordList} />
       </Card>
     </div>
 

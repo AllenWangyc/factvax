@@ -1,44 +1,89 @@
 import './detection.styl'
-import { Input, Typography, ConfigProvider, Button } from "antd"
+import { Input, Typography, ConfigProvider, Button, Select, Form } from "antd"
+import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { runes } from 'runes2'
+import { detectAPI } from '@/apis'
+
+const source_options = [
+  {
+    value: 'x',
+    label: 'X',
+  },
+  {
+    value: 'meta',
+    label: 'Meta',
+  },
+  {
+    value: 'Reddit',
+    label: 'Reddit',
+  },
+]
 
 const Detection = () => {
   const { TextArea } = Input
   const { Title } = Typography
+  const { Item } = Form
   const navigate = useNavigate()
+  const [text, setText] = useState('')
+
+  const handleDetect = async (values) => {
+    // console.log(values)
+    // console.log(text)
+    const res = await detectAPI(text)
+    console.log(res)
+  }
 
   return (
     <div className="P-detection">
-      <div className='before-detect-container'>
+      <Form className='before-detect-container'
+        onFinish={(values) => handleDetect(values)}
+      >
         <div className='detect-title-wrapper'>
           <Title level={1} className='detect-title'>FactVax Detection</Title>
         </div>
-        <div className='detect-text-area-wrapper'>
-          <ConfigProvider
-            theme={{
-              components: {
-                Input: {
-                  inputFontSize: 20
-                },
-              },
-            }}
+        <div className='datasource-wrapper'>
+          <Item className='datasource-item'
+            name='source'
           >
-            <TextArea
-              className='detect-text-area'
-              count={{
-                show: true,
-                max: 1000,
-                strategy: (txt) => runes(txt).length
-              }}
-              placeholder="Message FactVax"
-              style={{
-                height: 120,
-                resize: 'none',
-              }}
-              autoSize={{ minRows: 8, maxRows: 10 }}
+            <Select className='datasource'
+              size='large'
+              placeholder='Select a source'
+              options={source_options}
             />
-          </ConfigProvider>
+          </Item>
+        </div>
+        <div className='detect-text-area-wrapper'>
+          <Item className='detect-text-area-item'
+            name='text'
+          >
+            <ConfigProvider
+              theme={{
+                components: {
+                  Input: {
+                    inputFontSize: 18
+                  },
+                },
+              }}
+            >
+              <TextArea
+                className='detect-text-area'
+                count={{
+                  show: true,
+                  max: 1000,
+                  strategy: (txt) => runes(txt).length
+                }}
+                placeholder="Message FactVax"
+                style={{
+                  height: 120,
+                  resize: 'none',
+                }}
+                autoSize={{ minRows: 8, maxRows: 10 }}
+                value={text}
+                onChange={(e) => setText(e.target.value)}
+              />
+            </ConfigProvider>
+          </Item>
         </div>
         <div className='detect-btn-container'>
           <ConfigProvider
@@ -54,13 +99,14 @@ const Detection = () => {
           >
             <Button className='detect-btn'
               size='large'
-              onClick={() => navigate('/dashboard/result')}
+              htmlType='submit'
+            // onClick={() => navigate('/dashboard/result')}
             >
               Detect
             </Button>
           </ConfigProvider>
         </div>
-      </div>
+      </Form>
     </div>
   )
 }

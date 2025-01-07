@@ -14,7 +14,7 @@ const Register = () => {
   const [pwd, setPwd] = useState('')
   const navigate = useNavigate()
 
-  const onClickSignup = () => {
+  const onClickSignup = async () => {
     /**
      * Encapulate data and invoke signup API
      */
@@ -24,18 +24,15 @@ const Register = () => {
       email,
       password: pwd
     }
-    signUpAPI(formData)
-      .then((res) => {
-        if (res && res.success) {
-          message.success('Sign up successfully!')
-          navigate('/dashboard/login') // Redirect only after success
-        } else {
-          message.error('Sign up failed. Please try again.')
-        }
-      })
-      .catch(() => {
-        message.error('An error occurred during sign up. Please try again.')
-      })
+
+    try {
+      await signUpAPI(formData)
+      message.success('Sign up successfully!')
+      navigate('/dashboard/login') // Redirect only after success
+    }
+    catch (error) {
+      message.error('An error occurred during sign up. Please try again.')
+    }
   }
 
   const onClickBack = () => {
