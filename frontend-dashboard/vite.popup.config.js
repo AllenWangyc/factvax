@@ -8,7 +8,7 @@ import { CRX_OUTDIR } from './globalConfig'
 export default defineConfig({
   server: {
     port: 3000,
-    open: '/',
+    open: '/dashboard/login',
     https: {
       key: fs.readFileSync('./key.pem'), 
       cert: fs.readFileSync('./cert.pem'), 
