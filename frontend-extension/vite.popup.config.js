@@ -14,14 +14,14 @@ export default defineConfig({
     //   cert: fs.readFileSync('./cert.pem'), 
     // },
     // Reverse proxy setting, turn off mockjs before using it.
-    // proxy: {
-    //   '/api': {
-    //     // target: 'http://localhost/',
-    //     target: 'https://fact-vax-app-e8d263b7267d.herokuapp.com/',
-    //     changeOrigin: true,
-    //     secure: false
-    //   }
-    // }
+    proxy: {
+      '/api': {
+        target: 'http://localhost/',
+        // target: 'https://fact-vax-app-e8d263b7267d.herokuapp.com/',
+        changeOrigin: true,
+        // secure: false
+      }
+    }
   },
   resolve: {
     alias: {

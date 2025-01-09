@@ -3,7 +3,8 @@
 import { apiFetch } from '@/apis/apiConfig.jsx'
 import { request } from '@/utils'
 
-const API_DOMAIN = 'http://localhost:5050/'
+// const API_DOMAIN = 'http://localhost:5050/'
+const API_DOMAIN = 'https://fact-vax-app-e8d263b7267d.herokuapp.com/'
 
 export const API_CODE = {
   // API success, data success
@@ -21,25 +22,6 @@ export const API_FAILED = 'There is something wrong with net connection, please 
 
 // API integration
 export const apiReqs = {
-  // Login
-  signIn: (config) => {
-    return new Promise((resolve, reject) => {
-      config.url = API_DOMAIN + 'api/login/'
-      config.method = 'post'
-      config.success = (res) => {
-        resolve(res)
-      }
-      apiFetch(config)
-    })
-  },
-  // Login with Google account
-  signInByGoggle: (config) => {
-    return new Promise((resolve, reject) => {
-      config.url = API_DOMAIN + 'auth/google/'
-      config.method = 'get'
-      apiFetch(config)
-    })
-  },
   // Login with Google account
   signInByGithub: (config) => {
     return new Promise((resolve, reject) => {
@@ -59,18 +41,10 @@ export const apiReqs = {
       apiFetch(config)
     })
   },
-  // Get data
-  getHiesory: (config) => {
-    return new Promise((resolve, reject) => {
-      config.url = API_DOMAIN + 'api/getHistory/'
-      config.method = 'get'
-      apiFetch(config)
-    })
-  },
   // Detect text
   detect: (config) => {
     return new Promise((resolve, reject) => {
-      config.url = API_DOMAIN + 'api/detectText/'
+      config.url = API_DOMAIN + 'api/detect_text/default/'
       config.method = 'post'
 
       config.success = (res) => {

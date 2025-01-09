@@ -27,9 +27,22 @@
 #popup-content
   padding 5px
 
-#detection-text
-  height: 200px
-  overflow: auto
+  .loading-wrapper
+    display: flex
+    height: 100%
+    width 100%
+    justify-content: center
+    align-content: center
+
+  .display-wrapper
+    .detection-result
+      display: flex
+      align-content: center        
+
+    .detection-text
+      margin-top: 20px
+      height: 200px
+      overflow: auto
 
 #close-popup 
   position: absolute
