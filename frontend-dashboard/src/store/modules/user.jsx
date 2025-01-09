@@ -2,14 +2,15 @@ import { createSlice } from "@reduxjs/toolkit"
 import {
   setToken as _setToken, getToken, removeToken,
   setUsername as _setUsername, getUsername, removeUsername,
-  setColorSeed as _setColorSeed, getColorSeed, removeColorSeed
+  setColorSeed as _setColorSeed, getColorSeed, removeColorSeed,
+  setLogin as _setLogin, getLogin, removeLogin
 } from '@/utils'
 import { loginAPI } from '@/apis'
 
 const userStore = createSlice({
   name: 'user',
   initialState: {
-    isLogin: false,
+    isLogin: getLogin() || false,
     username: getUsername() || '',
     token: getToken() || '',
     colorSeed: getColorSeed() || -1, // Use for Setting avator's color and bg color, the value from [0, 9]
@@ -26,6 +27,7 @@ const userStore = createSlice({
     },
     setLogin(state) {
       state.isLogin = true
+      _setLogin(true)
     },
     setColorSeed(state, action) {
       // state.colorSeed = Math.floor(Math.random() * 10)
@@ -54,7 +56,6 @@ const fetchLogin = (loginForm) => {
   return async (dispatch) => {
     const res = await loginAPI(loginForm)
     dispatch(setLogin())
-    console.log(res.colorSeed);
 
     if (res.token) {
       dispatch(setToken(res.token))

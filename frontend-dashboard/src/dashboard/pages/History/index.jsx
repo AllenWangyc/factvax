@@ -15,11 +15,18 @@ import dayjs from "dayjs"
  * 4. Delete the specific record √
  */
 
-const resultComponent = {
-  'accurate': <Tag color="green">True</Tag>,
-  'misinformation': <Tag color="red">False</Tag>
+// const resultComponent = {
+//   'accurate': <Tag color="green">True</Tag>,
+//   'misinformation': <Tag color="red">False</Tag>
+// }
+
+const resultComponent = (result) => {
+  if (result === 'accurate') return (<Tag color="green">True</Tag>)
+  else if (result === 'misinformation') return (<Tag color="red">False</Tag>)
+  else return (<Tag color="gold">Unknown</Tag>)
 }
 
+// Notice the case-sensitive
 const sources = [
   {
     label: 'X',
@@ -135,7 +142,7 @@ const History = () => {
       title: 'Result',
       dataIndex: 'result',
       key: 'result',
-      render: result => resultComponent[result.classification],
+      render: result => resultComponent(result.classification),
     },
     {
       title: 'Action',
