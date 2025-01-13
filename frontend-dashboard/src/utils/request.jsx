@@ -9,13 +9,8 @@ import { getToken, removeToken } from '@/utils/token'
  * 3. request
  **/
 
-// const request = axios.create({
-//   baseURL: 'http://localhost:5050',
-//   timeout: 5000
-// })
-
 const request = axios.create({
-  baseURL: 'https://fact-vax-app-e8d263b7267d.herokuapp.com',
+  baseURL: import.meta.env.VITE_BACKEND_PRODUCT_ENV,
   withCredentials: true,
   timeout: 60000, // 60s
 })

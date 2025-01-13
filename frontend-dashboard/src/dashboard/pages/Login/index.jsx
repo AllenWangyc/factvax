@@ -3,7 +3,6 @@ import { GoogleOutlined, GithubFilled } from '@ant-design/icons'
 import { useState } from 'react'
 import './login.styl'
 import { useNavigate } from 'react-router-dom'
-import { apiReqs, loginAPI } from '@/apis'
 import { useDispatch } from 'react-redux'
 import { fetchLogin } from '@/store/modules/user'
 
@@ -39,22 +38,6 @@ const Login = () => {
       setLoginError(true)
       message.error('Log in failed. Please try again.')
     }
-  }
-
-  const onClickGoogleLogin = () => {
-    apiReqs.signInByGoggle({
-      success: () => {
-        navigate('/dashboard')
-      }
-    })
-  }
-
-  const onClickGithubLogin = () => {
-    apiReqs.signInByGithub({
-      success: () => {
-        navigate('/dashboard')
-      }
-    })
   }
 
   return (
@@ -129,7 +112,7 @@ const Login = () => {
               <Button className='third-party-signin-opt'
                 id='signin-google'
                 size='large'
-                onClick={onClickGoogleLogin}
+              // onClick={onClickGoogleLogin}
               >
                 <GoogleOutlined />
                 Google
@@ -137,7 +120,7 @@ const Login = () => {
               <Button className='third-party-signin-opt'
                 id='signin-github'
                 size='large'
-                onClick={onClickGithubLogin}
+              // onClick={onClickGithubLogin}
               >
                 <GithubFilled />
                 Github

@@ -28,14 +28,13 @@ const Detection = () => {
   const [text, setText] = useState('')
 
   const handleDetect = async (values) => {
-    // console.log(values)
-    // console.log(text)
     const { source } = values
     const data = {
       source,
       text
     }
     const res = await detectAPI(data)
+    navigate(`/dashboard/result/${res.response._id}`)
     console.log(res)
   }
 
@@ -117,7 +116,6 @@ const Detection = () => {
               <Button className='detect-btn'
                 size='large'
                 htmlType='submit'
-              // onClick={() => navigate('/dashboard/result')}
               >
                 Detect
               </Button>

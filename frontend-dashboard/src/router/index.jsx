@@ -13,7 +13,7 @@ const router = createBrowserRouter([
         element: <Detection />
       },
       {
-        path: 'result',
+        path: 'result/:id',
         element: <Result />
       },
       {

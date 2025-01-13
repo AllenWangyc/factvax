@@ -113,13 +113,13 @@ const History = () => {
       dataIndex: 'text',
       key: 'text',
       // render: process the text to make it navigate to the specific detection result page
-      render: (text) => {
+      render: (text, record) => {
         return (
           // <span  >{text}</span>
           <Tooltip title={text}>
             <div
               className="record-item-text"
-              onClick={() => { navigate('/dashboard') }}
+              onClick={() => navigate(`/dashboard/result/${record._id}`)}
               style={{
                 width: '800px',
                 overflow: "hidden",
