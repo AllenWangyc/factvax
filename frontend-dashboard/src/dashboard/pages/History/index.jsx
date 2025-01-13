@@ -15,11 +15,6 @@ import dayjs from "dayjs"
  * 4. Delete the specific record √
  */
 
-// const resultComponent = {
-//   'accurate': <Tag color="green">True</Tag>,
-//   'misinformation': <Tag color="red">False</Tag>
-// }
-
 const resultComponent = (result) => {
   if (result === 'accurate') return (<Tag color="green">True</Tag>)
   else if (result === 'misinformation') return (<Tag color="red">False</Tag>)
@@ -72,6 +67,10 @@ const History = () => {
     if (e.key === 'Enter') {
       setSearchText(e.target.value)
       setTypingText('')
+
+      /**
+       * Invoke Searching filter API here
+       *  */
     }
   }
 
@@ -96,6 +95,10 @@ const History = () => {
       source: formData.source || '',
       result: formData.result || ''
     })
+
+    /**
+     * Invoke advanced filter API here
+     */
 
     handleToggleFilter()
   }

@@ -1,38 +1,26 @@
 import { createSlice } from "@reduxjs/toolkit"
-import {
-  setToken as _setToken, getToken, removeToken,
-  setUsername as _setUsername, getUsername, removeUsername,
-  setColorSeed as _setColorSeed, getColorSeed, removeColorSeed,
-  setLogin as _setLogin, getLogin, removeLogin
-} from '@/utils'
+import { parseJsonCookies } from '@/utils'
 import { loginAPI } from '@/apis'
+
+const userInfo = parseJsonCookies('userInfo')
 
 const userStore = createSlice({
   name: 'user',
   initialState: {
-    isLogin: getLogin() || false,
-    username: getUsername() || '',
-    token: getToken() || '',
-    colorSeed: getColorSeed() || -1, // Use for Setting avator's color and bg color, the value from [0, 9]
+    isLogin: userInfo ? true : false,
+    username: userInfo?.username || '',
+    colorSeed: userInfo?.randomNumber || -1, // Use for Setting avator's color and bg color, the value from [0, 9]
     detectCounter: 0,
   },
   reducers: {
-    setUsername(state, action) {
-      state.username = action.payload
-      _setUsername(action.payload)
-    },
-    setToken(state, action) {
-      state.token = action.payload
-      _setToken(action.payload)
-    },
     setLogin(state) {
       state.isLogin = true
-      _setLogin(true)
+    },
+    setUsername(state, action) {
+      state.username = action.payload
     },
     setColorSeed(state, action) {
-      // state.colorSeed = Math.floor(Math.random() * 10)
       state.colorSeed = action.payload
-      _setColorSeed(state.colorSeed)
     },
     increaseDetectCounter(state) {
       state.detectCounter++
@@ -40,26 +28,19 @@ const userStore = createSlice({
     logout(state) {
       // Reset global states and local storage key values
       state.username = ''
-      state.token = ''
       state.colorSeed = -1
       state.isLogin = false
-      removeToken()
-      removeUsername()
-      removeColorSeed()
     }
   }
 })
 
-const { setUsername, setToken, setColorSeed, increaseDetectCounter, logout, setLogin } = userStore.actions
+const { setUsername, setColorSeed, increaseDetectCounter, logout, setLogin } = userStore.actions
 
 const fetchLogin = (loginForm) => {
   return async (dispatch) => {
     const res = await loginAPI(loginForm)
+    console.log(res)
     dispatch(setLogin())
-
-    if (res.token) {
-      dispatch(setToken(res.token))
-    }
     if (res.username) {
       dispatch(setUsername(res.username))
     }

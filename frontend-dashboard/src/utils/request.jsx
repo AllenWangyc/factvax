@@ -1,6 +1,6 @@
 import axios from 'axios'
 import router from '@/router'
-import { getToken, removeToken } from '@/utils/token'
+import { getToken, removeToken } from '@/utils/storage/token'
 
 /**
  * axois encapsulation
@@ -10,7 +10,8 @@ import { getToken, removeToken } from '@/utils/token'
  **/
 
 const request = axios.create({
-  baseURL: import.meta.env.VITE_BACKEND_PRODUCT_ENV,
+  // baseURL: import.meta.env.VITE_BACKEND_PRODUCT_ENV,
+  baseURL: import.meta.env.VITE_BACKEND_DEV_ENV,
   withCredentials: true,
   timeout: 60000, // 60s
 })

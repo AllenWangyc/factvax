@@ -1,8 +1,9 @@
 import { Button } from "antd"
+import { parseJsonCookies } from "@/utils"
 
 const visualization = () => {
   const onClick = () => {
-    console.log(import.meta.env.VITE_BACKEND_PRODUCT_ENV)
+    console.log(parseJsonCookies('userInfo'))
   }
   return (
     <div>

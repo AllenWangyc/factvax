@@ -16,7 +16,7 @@ export default defineConfig({
     // Reverse proxy setting, turn off mockjs before using it.
     // proxy: {
     //   '/api': {
-    //     // target: 'http://localhost/',
+    //     // target: 'https://localhost/',
     //     target: 'https://fact-vax-app-e8d263b7267d.herokuapp.com/',
     //     changeOrigin: true,
     //     secure: false

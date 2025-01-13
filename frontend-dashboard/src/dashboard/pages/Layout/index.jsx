@@ -61,8 +61,8 @@ const DashboardLayout = () => {
   }
 
   const handleLogout = () => {
-    dispatch(logout())
     navigate('/dashboard/login')
+    dispatch(logout())
   }
 
   return (
