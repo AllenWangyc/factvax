@@ -75,7 +75,9 @@ function Popup() {
               icon={<AntDesignOutlined />}
               size="large"
               onClick={() => {
-                chrome.tabs.create({ url: process.env.REACT_APP_DASHBOARD_URL })
+                console.log(process.env.REACT_APP_DASHBOARD_URL);
+                chrome.tabs.create({ url: import.meta.env.VITE_DASHBOARD_DEV_URL })
+                // chrome.tabs.create({ url: 'https://localhost:3000/dashboard/login' })
               }}
             >
               Go to dashboard
