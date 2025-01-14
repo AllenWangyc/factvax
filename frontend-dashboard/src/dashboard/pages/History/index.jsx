@@ -4,7 +4,7 @@ import { useEffect, useState } from "react"
 import './history.styl'
 import { useNavigate } from "react-router-dom"
 import classNames from "classnames"
-import { historyFetchAPI, deleteRecordAPI } from "@/apis"
+import { historyFetchAPI, deleteRecordAPI, filterRecordsByText, filterRecordsByMultiCons } from "@/apis"
 import dayjs from "dayjs"
 
 /**
@@ -63,14 +63,22 @@ const History = () => {
 
 
   // Handle with press Enter on the search box
-  const handleSearch = (e) => {
+  const handleSearch = async (e) => {
     if (e.key === 'Enter') {
-      setSearchText(e.target.value)
-      setTypingText('')
+      // setSearchText(e.target.value)
 
       /**
        * Invoke Searching filter API here
        *  */
+      setTypingText('')
+      const res = await filterRecordsByText(typingText)
+      setRecordList(res.history)
+
+      // Reset the reqData to re-render the list
+      setReqData({
+        ...reqData,
+      })
+      // setTypingText('')
     }
   }
 
@@ -80,14 +88,26 @@ const History = () => {
   }
 
   // Handle with click filter button
-  const handleFilterFinish = (formData) => {
+  const handleFilterFinish = async (formData) => {
     /**
      * Invoke getRecordList API and re-fetch the list, reset all states
      * @param {Array} formData.dayjs
      * A list consists of 2 dayjs elements, [0] is start date and [1] is end date
      */
-    const startDate = formData.dates[0].format('MMM D, YYYY')
-    const endDate = formData.dates[1].format('MMM D, YYYY')
+
+    let startDate = ''
+    let endDate = ''
+    if (formData.dates) {
+      startDate = formData.dates[0].format('MMM D, YYYY')
+      endDate = formData.dates[1].format('MMM D, YYYY')
+    }
+    console.log(formData)
+
+    const res = await filterRecordsByMultiCons({
+      ...formData,
+      dates: [startDate, endDate]
+    })
+    setRecordList(res.history)
 
     setReqData({
       ...reqData,

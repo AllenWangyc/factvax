@@ -83,3 +83,25 @@ export function historyFetchByIDAPI(id) {
     method: 'GET',
   })
 }
+
+export function filterRecordsByText(text) {
+  return request({
+    url: '',
+    method: 'GET'
+  })
+}
+
+export function filterRecordsByMultiCons(filterForm) {
+  const { dates, source, result } = filterForm
+  return request({
+    url: '',
+    method: 'GET'
+  })
+}
+
+export function logoutAPI() {
+  return request({
+    url: '',
+    method: 'GET'
+  })
+}
