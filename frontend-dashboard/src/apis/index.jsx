@@ -99,7 +99,7 @@ export function filterRecordsByMultiCons(filterForm) {
 // Logout
 export function logoutAPI() {
   return request({
-    url: ``,
+    url: `/api/user/logout`,
     method: 'GET'
   })
 }

@@ -3,7 +3,7 @@ import { SearchOutlined, HistoryOutlined, LineChartOutlined, UserOutlined } from
 import './layout.styl'
 import { useNavigate, useLocation, Outlet } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
-import { logout } from '@/store/modules/user'
+import { fetchLogout } from '@/store/modules/user'
 
 const items = [
   {
@@ -60,9 +60,9 @@ const DashboardLayout = () => {
       .join('')
   }
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    await fetchLogout()
     navigate('/dashboard/login')
-    dispatch(logout())
   }
 
   return (

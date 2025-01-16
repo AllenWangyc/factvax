@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit"
 import { parseJsonCookies } from '@/utils'
-import { loginAPI, loginByGoogleAPI, loginByGithubAPI } from '@/apis'
+import { loginAPI, loginByGoogleAPI, loginByGithubAPI, logoutAPI } from '@/apis'
 
 const userInfo = parseJsonCookies('userInfo')
 
@@ -78,8 +78,16 @@ const fetchLoginByGithub = () => {
   }
 }
 
+const fetchLogout = () => {
+  return async (dispatch) => {
+    const res = await logoutAPI()
+    console.log('Lotgout response: ', res)
+    dispatch(logout())
+  }
+}
+
 const userReducer = userStore.reducer
 
-export { fetchLogin, fetchLoginByGoogle, fetchLoginByGithub, setColorSeed, logout }
+export { fetchLogin, fetchLoginByGoogle, fetchLoginByGithub, setColorSeed, logout, fetchLogout }
 
 export default userReducer
