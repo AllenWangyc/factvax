@@ -3,7 +3,7 @@ import { LeftOutlined } from '@ant-design/icons'
 import { useState } from 'react'
 import './register.styl'
 import { useNavigate } from 'react-router-dom'
-import { apiReqs, signUpAPI } from '@/apis'
+import { signUpAPI } from '@/apis'
 
 const Register = () => {
   const { Title } = Typography
