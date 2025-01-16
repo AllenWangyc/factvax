@@ -25,15 +25,15 @@ const resultComponent = (result) => {
 const sources = [
   {
     label: 'X',
-    value: 'x'
+    value: 'X'
   },
   {
     label: 'Meta',
-    value: 'meta'
+    value: 'Meta'
   },
   {
     label: 'Reddit',
-    value: 'reddit'
+    value: 'Reddit'
   }
 ]
 
@@ -52,7 +52,6 @@ const History = () => {
   const { RangePicker } = DatePicker
   const navigate = useNavigate()
   const [recordList, setRecordList] = useState([])
-  const [searchText, setSearchText] = useState('') // Using as a param that fetch filtered record list
   const [typingText, setTypingText] = useState('') // Using for sync with searching input value
   const [isFilterActive, setIsFilterActive] = useState(false)
   const [reqData, setReqData] = useState({
@@ -61,29 +60,18 @@ const History = () => {
     result: ''
   })
 
-
   // Handle with press Enter on the search box
   const handleSearch = async (e) => {
     if (e.key === 'Enter') {
-      // setSearchText(e.target.value)
-
-      /**
-       * Invoke Searching filter API here
-       *  */
-      setTypingText('')
       const res = await filterRecordsByText(typingText)
       setRecordList(res.history)
-
-      // Reset the reqData to re-render the list
-      setReqData({
-        ...reqData,
-      })
-      // setTypingText('')
+      setTypingText('')
     }
   }
 
   // Toggle filter icon to show/hide filter section
   const handleToggleFilter = () => {
+    setTypingText('')
     setIsFilterActive(!isFilterActive)
   }
 
@@ -98,15 +86,15 @@ const History = () => {
     let startDate = ''
     let endDate = ''
     if (formData.dates) {
-      startDate = formData.dates[0].format('MMM D, YYYY')
-      endDate = formData.dates[1].format('MMM D, YYYY')
+      startDate = formData.dates[0].format('YYYY-MM-DD')
+      endDate = formData.dates[1].format('YYYY-MM-DD')
     }
-    console.log(formData)
 
     const res = await filterRecordsByMultiCons({
       ...formData,
       dates: [startDate, endDate]
     })
+    console.log('multi conditions: ', res);
     setRecordList(res.history)
 
     setReqData({
@@ -200,16 +188,15 @@ const History = () => {
     }
     getRecordList()
 
-  }, [reqData])
+  }, [])
 
   const onConfirm = async (data) => {
     /**
      * Using for delete the specific record when click the delete button 
      */
     await deleteRecordAPI(data._id)
-    setReqData({
-      ...reqData
-    })
+    const res = await historyFetchAPI()
+    setRecordList(res.history)
   }
 
   return (
@@ -221,6 +208,7 @@ const History = () => {
           <div className="upper-search-content">
             <div className="upper-search-wrapper">
               <Input className="upper-search"
+                disabled={isFilterActive}
                 placeholder="Search"
                 size="large"
                 value={typingText}

@@ -48,7 +48,7 @@ export function historyFetchAPI() {
 
 export function signUpAPI(formData) {
   return request({
-    url: '/register/',
+    url: '/api/user/register/',
     method: 'POST',
     data: formData
   })
@@ -56,9 +56,16 @@ export function signUpAPI(formData) {
 
 export function loginAPI(formData) {
   return request({
-    url: '/login/',
+    url: '/api/user/login/',
     method: 'POST',
     data: formData
+  })
+}
+
+export function loginByGoogleAPI() {
+  return request({
+    url: '/api/auth/google',
+    method: 'GET'
   })
 }
 
@@ -86,22 +93,33 @@ export function historyFetchByIDAPI(id) {
 
 export function filterRecordsByText(text) {
   return request({
-    url: '',
+    url: `/api/history/text_search?text=${text}`,
     method: 'GET'
   })
 }
 
 export function filterRecordsByMultiCons(filterForm) {
   const { dates, source, result } = filterForm
+  const params = []
+
+  if (dates && dates[0] !== '' && dates[1] !== '')
+    params.push(`date=${dates[0]},${dates[1]}`)
+
+  if (source)
+    params.push(`source=${source}`)
+
+  if (result)
+    params.push(`result=${result}`)
+
   return request({
-    url: '',
+    url: `/api/history/filter?${params.join('&')}`,
     method: 'GET'
   })
 }
 
 export function logoutAPI() {
   return request({
-    url: '',
+    url: ``,
     method: 'GET'
   })
 }

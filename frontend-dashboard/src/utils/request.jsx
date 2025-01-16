@@ -1,6 +1,6 @@
 import axios from 'axios'
 import router from '@/router'
-import { getToken, removeToken } from '@/utils/storage/token'
+import { message } from 'antd'
 
 /**
  * axois encapsulation
@@ -16,26 +16,18 @@ const request = axios.create({
   timeout: 60000, // 60s
 })
 
-// Add some parameters before send a request
-request.interceptors.request.use((config) => {
-  // Inject token to request header
-  const token = getToken()
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`
-  }
-  return config
-}, (error) => {
-  return Promise.reject(error)
-})
-
 // Intercept response bofore return to client side, handle with response data
 request.interceptors.response.use((response) => {
   return response.data
 }, (error) => {
   console.dir(error)
   if (error.response.status === 401) {
-    removeToken()
     router.navigate('/dashboard/login')
+    window.location.reload()
+  }
+  else if (error.response.statis === 403) {
+    router.navigate('/dashboard/login')
+    message.warning('Your session has expired. Please log in again to continue.')
     window.location.reload()
   }
   return Promise.reject(error)

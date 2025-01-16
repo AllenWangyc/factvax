@@ -4,7 +4,7 @@ import { useState } from 'react'
 import './login.styl'
 import { useNavigate } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
-import { fetchLogin } from '@/store/modules/user'
+import { fetchLogin, fetchLoginByGoogle } from '@/store/modules/user'
 
 const Login = () => {
   const { Title } = Typography
@@ -31,6 +31,18 @@ const Login = () => {
 
     try {
       await dispatch(fetchLogin(loginForm))
+      message.success('Log in successfully!')
+      navigate('/dashboard')
+    }
+    catch (error) {
+      setLoginError(true)
+      message.error('Log in failed. Please try again.')
+    }
+  }
+
+  const onClickGoogleLogin = async () => {
+    try {
+      await dispatch(fetchLoginByGoogle())
       message.success('Log in successfully!')
       navigate('/dashboard')
     }
@@ -112,7 +124,7 @@ const Login = () => {
               <Button className='third-party-signin-opt'
                 id='signin-google'
                 size='large'
-              // onClick={onClickGoogleLogin}
+                onClick={onClickGoogleLogin}
               >
                 <GoogleOutlined />
                 Google
