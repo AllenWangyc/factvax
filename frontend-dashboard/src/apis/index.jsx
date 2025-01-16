@@ -1,6 +1,7 @@
 /* global chrome */
 import { request } from '@/utils'
 
+// Fetch all history records
 export function historyFetchAPI() {
   return request({
     url: `/api/history/user_history`,
@@ -8,6 +9,7 @@ export function historyFetchAPI() {
   })
 }
 
+// Register
 export function signUpAPI(formData) {
   return request({
     url: '/api/user/register/',
@@ -16,6 +18,7 @@ export function signUpAPI(formData) {
   })
 }
 
+// Login
 export function loginAPI(formData) {
   return request({
     url: '/api/user/login/',
@@ -24,6 +27,7 @@ export function loginAPI(formData) {
   })
 }
 
+// Login by google third party
 export function loginByGoogleAPI() {
   return request({
     url: '/api/auth/google',
@@ -31,6 +35,15 @@ export function loginByGoogleAPI() {
   })
 }
 
+// Login by github third party
+export function loginByGithubAPI() {
+  return request({
+    url: '/api/auth/github',
+    method: 'GET'
+  })
+}
+
+// Detect misinformation on dashboard
 export function detectAPI(data) {
   return request({
     url: '/api/detect_text/',
@@ -39,6 +52,7 @@ export function detectAPI(data) {
   })
 }
 
+// Delete a particular record with record id
 export function deleteRecordAPI(id) {
   return request({
     url: `/api/history/delete_record/${id}`,
@@ -46,6 +60,7 @@ export function deleteRecordAPI(id) {
   })
 }
 
+// Get a particular record with record id
 export function historyFetchByIDAPI(id) {
   return request({
     url: `/api/history/record/${id}`,
@@ -53,6 +68,7 @@ export function historyFetchByIDAPI(id) {
   })
 }
 
+// Filter records by searching text
 export function filterRecordsByText(text) {
   return request({
     url: `/api/history/text_search?text=${text}`,
@@ -60,6 +76,7 @@ export function filterRecordsByText(text) {
   })
 }
 
+// Filter records by multi conditions (dates, source, result)
 export function filterRecordsByMultiCons(filterForm) {
   const { dates, source, result } = filterForm
   const params = []
@@ -79,6 +96,7 @@ export function filterRecordsByMultiCons(filterForm) {
   })
 }
 
+// Logout
 export function logoutAPI() {
   return request({
     url: ``,

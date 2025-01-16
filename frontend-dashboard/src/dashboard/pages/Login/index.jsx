@@ -4,7 +4,7 @@ import { useState } from 'react'
 import './login.styl'
 import { useNavigate } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
-import { fetchLogin, fetchLoginByGoogle } from '@/store/modules/user'
+import { fetchLogin, fetchLoginByGoogle, fetchLoginByGithub } from '@/store/modules/user'
 
 const Login = () => {
   const { Title } = Typography
@@ -35,7 +35,6 @@ const Login = () => {
       navigate('/dashboard')
     }
     catch (error) {
-      setLoginError(true)
       message.error('Log in failed. Please try again.')
     }
   }
@@ -43,6 +42,17 @@ const Login = () => {
   const onClickGoogleLogin = async () => {
     try {
       await dispatch(fetchLoginByGoogle())
+      message.success('Log in successfully!')
+      navigate('/dashboard')
+    }
+    catch (error) {
+      message.error('Log in failed. Please try again.')
+    }
+  }
+
+  const onClickGithubLogin = async () => {
+    try {
+      await dispatch(fetchLoginByGithub())
       message.success('Log in successfully!')
       navigate('/dashboard')
     }
@@ -132,7 +142,7 @@ const Login = () => {
               <Button className='third-party-signin-opt'
                 id='signin-github'
                 size='large'
-              // onClick={onClickGithubLogin}
+                onClick={onClickGithubLogin}
               >
                 <GithubFilled />
                 Github
