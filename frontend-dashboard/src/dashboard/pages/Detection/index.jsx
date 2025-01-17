@@ -10,7 +10,7 @@ const source_options = [
   { value: "X", label: "X" },
   { value: "Meta", label: "Meta" },
   { value: "Reddit", label: "Reddit" },
-];
+]
 
 const Detection = () => {
   const { TextArea } = Input
@@ -39,11 +39,7 @@ const Detection = () => {
       return // Ignore no-speech error
     }
     message.error(`Speech recognition error: ${error.error}`)
-    setIsListening(false);
-  }
-
-  recognition.onend = () => {
-    console.log("Speech recognition ended and microphone released.")
+    setIsListening(false)
   }
 
   const startListening = () => {
@@ -52,12 +48,14 @@ const Detection = () => {
   }
 
   const stopListening = () => {
-    setIsListening(false)
-    recognition.onresult = null; // Clear onresult event
-    recognition.onerror = null; // Clear onerror event
-    recognition.onend = null; // Clear onend event
-    recognition.abort(); // Interupt incognition and release resource
-    message.info("Voice input paused and microphone released.")
+    if (isListening) {
+      setIsListening(false)
+      recognition.abort()
+      recognition.onend = () => {
+        console.log("Microphone has been released successfully.")
+        message.info("Voice input paused and microphone released.")
+      }
+    }
   }
 
   useEffect(() => {

@@ -15,14 +15,18 @@
     "antd": "^5.22.2",
     "antd-style": "^3.7.1",
     "axios": "^1.7.9",
+    "chart.js": "^4.4.7",
     "classnames": "^2.5.1",
+    "d3": "^7.9.0",
     "js-cookie": "^3.0.5",
     "mockjs": "^1.1.0",
     "mockjs-fetch": "^2.0.0",
     "react": "^18.3.1",
+    "react-chartjs-2": "^5.3.0",
     "react-dom": "^18.3.1",
     "react-redux": "^9.2.0",
     "react-router-dom": "^7.0.1",
+    "react-wordcloud": "^1.2.7",
     "runes2": "^1.1.4"
   },
   "devDependencies": {
