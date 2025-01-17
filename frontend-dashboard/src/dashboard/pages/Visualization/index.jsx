@@ -224,13 +224,14 @@ const BarChart = ({ data }) => {
   );
 };
 
-// Word Cloud Component
-const WordCloudSection = ({ keywords, options }) => (
-  <div className="wordcloud-section">
-    <h3>Dynamic Vaccine Misinformation Keywords</h3>
-    <WordCloud words={keywords} options={options} />
-  </div>
-);
+function WordCloudSection({ keywords, options }) {
+  return (
+    <div className="wordcloud-section">
+      <h3>Dynamic Vaccine Misinformation Keywords</h3>
+      <WordCloud words={keywords} options={options} />
+    </div>
+  )
+}
 
 // Line Chart Component
 const LineChart = ({ data }) => {

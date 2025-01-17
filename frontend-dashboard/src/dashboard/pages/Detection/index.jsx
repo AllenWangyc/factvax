@@ -58,15 +58,15 @@ const Detection = () => {
     }
   }
 
-  useEffect(() => {
-    return () => {
-      recognition.onresult = null
-      recognition.onerror = null
-      recognition.onend = null; // Unbind event
-      recognition.abort(); // Forcedly release resource
-      message.info("Speech recognition stopped.");
-    }
-  }, [])
+  // useEffect(() => {
+  //   return () => {
+  //     recognition.onresult = null
+  //     recognition.onerror = null
+  //     recognition.onend = null; // Unbind event
+  //     recognition.abort(); // Forcedly release resource
+  //     message.info("Speech recognition stopped.");
+  //   }
+  // }, [])
 
   const handleDetect = async (values) => {
     const { source } = values
