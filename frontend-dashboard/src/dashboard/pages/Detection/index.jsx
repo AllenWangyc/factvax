@@ -34,8 +34,16 @@ const Detection = () => {
   }
 
   recognition.onerror = (error) => {
+    if (error.error === "no-speech") {
+      console.warn("No speech detected. Microphone may have been idle.")
+      return // Ignore no-speech error
+    }
     message.error(`Speech recognition error: ${error.error}`)
-    setIsListening(false)
+    setIsListening(false);
+  }
+
+  recognition.onend = () => {
+    console.log("Speech recognition ended and microphone released.")
   }
 
   const startListening = () => {
@@ -47,17 +55,20 @@ const Detection = () => {
     setIsListening(false)
     recognition.onresult = null; // Clear onresult event
     recognition.onerror = null; // Clear onerror event
-    recognition.stop()
-    message.info("Voice input paused.")
+    recognition.onend = null; // Clear onend event
+    recognition.abort(); // Interupt incognition and release resource
+    message.info("Voice input paused and microphone released.")
   }
 
   useEffect(() => {
     return () => {
       recognition.onresult = null
       recognition.onerror = null
-      recognition.abort(); // Stop voice recognition and releaser resource
+      recognition.onend = null; // Unbind event
+      recognition.abort(); // Forcedly release resource
+      message.info("Speech recognition stopped.");
     }
-  }, []);
+  }, [])
 
   const handleDetect = async (values) => {
     const { source } = values
@@ -114,7 +125,7 @@ const Detection = () => {
             ) : (
               <TextArea
                 className="detect-text-area"
-                placeholder="Message FactVax"
+                placeholder="Please enter the vaccine information"
                 value={text}
                 onChange={(e) => setText(e.target.value)}
               />
