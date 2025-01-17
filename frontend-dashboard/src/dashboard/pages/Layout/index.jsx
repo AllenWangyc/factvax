@@ -35,8 +35,6 @@ const DashboardLayout = () => {
 
   // Get the current pathname
   const selectedKey = location.pathname
-
-  // Use token for checking if user has login
   const isLogin = useSelector(state => state.user.isLogin)
 
   // Randomly generate color assortment of avatar font color and bg color
@@ -61,7 +59,7 @@ const DashboardLayout = () => {
   }
 
   const handleLogout = async () => {
-    await fetchLogout()
+    await dispatch(fetchLogout())
     navigate('/dashboard/login')
   }
 

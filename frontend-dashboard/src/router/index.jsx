@@ -1,12 +1,21 @@
 import { Suspense, lazy } from "react"
 import { createBrowserRouter } from "react-router-dom"
 import { Layout, Detection, History, Visualization, Login, Register, Result } from '@/dashboard/pages'
+import { AuthRoute } from "@/components/AuthRoute"
 
 const router = createBrowserRouter([
   // Dashboard panel
   {
+    path: '/',
+    element: null,
+    loader: () => {
+      window.location.replace('/dashboard/');
+      return null;
+    }
+  },
+  {
     path: '/dashboard/',
-    element: <Layout />,
+    element: <AuthRoute><Layout /></AuthRoute>,
     children: [
       {
         index: true,

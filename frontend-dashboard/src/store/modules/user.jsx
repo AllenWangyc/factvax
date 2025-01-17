@@ -81,7 +81,7 @@ const fetchLoginByGithub = () => {
 const fetchLogout = () => {
   return async (dispatch) => {
     const res = await logoutAPI()
-    console.log('Lotgout response: ', res)
+    console.log('Lotgout response (after): ', res)
     dispatch(logout())
   }
 }
