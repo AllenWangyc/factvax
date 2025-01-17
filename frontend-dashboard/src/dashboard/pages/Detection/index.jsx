@@ -1,130 +1,133 @@
-import './detection.styl'
-import { Input, Typography, ConfigProvider, Button, Select, Form } from "antd"
-import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { runes } from 'runes2'
-import { detectAPI } from '@/apis'
+import "./detection.styl";
+import { Input, Typography, ConfigProvider, Button, Select, Form, message } from "antd";
+import { useState, useRef } from "react";
+import { useNavigate } from "react-router-dom";
+import { detectAPI } from "@/apis";
+import { AudioOutlined, LoadingOutlined } from "@ant-design/icons";
 
 const source_options = [
-  {
-    value: 'X',
-    label: 'X',
-  },
-  {
-    value: 'Meta',
-    label: 'Meta',
-  },
-  {
-    value: 'Reddit',
-    label: 'Reddit',
-  },
-]
+  { value: "X", label: "X" },
+  { value: "Meta", label: "Meta" },
+  { value: "Reddit", label: "Reddit" },
+];
 
 const Detection = () => {
-  const { TextArea } = Input
-  const { Title } = Typography
-  const { Item } = Form
-  const navigate = useNavigate()
-  const [text, setText] = useState('')
+  const { TextArea } = Input;
+  const { Title } = Typography;
+  const { Item } = Form;
+  const navigate = useNavigate();
+  const formRef = useRef(null);
+  const [text, setText] = useState("");
+  const [isListening, setIsListening] = useState(false);
+  const [isDetecting, setIsDetecting] = useState(false);
+
+  const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+  recognition.lang = "en-US";
+  recognition.interimResults = false;
+
+  recognition.onresult = (event) => {
+    const speechToText = event.results[0][0].transcript;
+    setText(speechToText);
+    setIsListening(false);
+    message.success(`Recognized: "${speechToText}"`);
+  };
+
+  recognition.onerror = (error) => {
+    message.error(`Speech recognition error: ${error.error}`);
+    setIsListening(false);
+  };
+
+  const startListening = () => {
+    setIsListening(true);
+    recognition.start();
+  };
 
   const handleDetect = async (values) => {
-    const { source } = values
-    const data = {
-      source,
-      text
+    const { source } = values;
+    if (!text.trim()) {
+      message.warning("Please enter or speak text to detect.");
+      return;
     }
-    const res = await detectAPI(data)
-    navigate(`/dashboard/result/${res.response._id}`)
-    console.log(res)
-  }
+
+    setIsDetecting(true);
+    try {
+      const data = { source, text };
+      const res = await detectAPI(data);
+      navigate(`/dashboard/result/${res.response._id}`);
+    } catch (err) {
+      message.error("Detection failed");
+    } finally {
+      setIsDetecting(false);
+    }
+  };
 
   return (
     <div className="P-detection">
-      <ConfigProvider
-        theme={{
-          components: {
-            Form: {
-              labelFontSize: 18
-            },
-          },
-        }}
-      >
-        <Form className='before-detect-container'
-          onFinish={(values) => handleDetect(values)}
+      <ConfigProvider>
+        <Form
+          className="before-detect-container"
+          onFinish={handleDetect}
+          ref={formRef}
         >
-          <div className='detect-title-wrapper'>
-            <Title level={1} className='detect-title'>FactVax Detection</Title>
+          <div className="detect-title-wrapper">
+            <Title level={1} className="detect-title">FactVax Detection</Title>
           </div>
-          <div className='datasource-wrapper'>
-            <Item className='datasource-item'
-              name='source'
-              label='Info Source'
+          <div className="datasource-wrapper">
+            <Item
+              className="datasource-item"
+              name="source"
+              label="Info Source"
               colon={false}
-              layout='vertical'
+              layout="vertical"
+              rules={[{ required: true, message: "Please select a source" }]}
             >
-              <Select className='datasource'
-                size='large'
-                placeholder='Select a source'
+              <Select
+                className="datasource"
+                size="large"
+                placeholder="Select a source"
                 options={source_options}
               />
             </Item>
           </div>
-          <div className='detect-text-area-wrapper'>
-            <Item className='detect-text-area-item'
-              name='text'
-            >
-              <ConfigProvider
-                theme={{
-                  components: {
-                    Input: {
-                      inputFontSize: 18
-                    },
-                  },
-                }}
-              >
-                <TextArea
-                  className='detect-text-area'
-                  count={{
-                    show: true,
-                    max: 1000,
-                    strategy: (txt) => runes(txt).length
-                  }}
-                  placeholder="Message FactVax"
-                  style={{
-                    height: 120,
-                    resize: 'none',
-                  }}
-                  autoSize={{ minRows: 8, maxRows: 10 }}
-                  value={text}
-                  onChange={(e) => setText(e.target.value)}
-                />
-              </ConfigProvider>
-            </Item>
+          <div className="detect-text-area-wrapper">
+            {isListening ? (
+              <div className="listening-animation">Listening...</div>
+            ) : isDetecting ? (
+              <div className="listening-animation">Detecting...</div>
+            ) : (
+              <TextArea
+                className="detect-text-area"
+                placeholder="Message FactVax"
+                style={{ height: 120, resize: "none" }}
+                autoSize={{ minRows: 8, maxRows: 10 }}
+                value={text}
+                onChange={(e) => setText(e.target.value)}
+              />
+            )}
+            {!isListening && !isDetecting && (
+              <Button
+                className="voice-input-btn"
+                type="primary"
+                icon={<AudioOutlined />}
+                onClick={startListening}
+                style={{ position: "absolute", right: "10px", bottom: "10px" }}
+              />
+            )}
           </div>
-          <div className='detect-btn-container'>
-            <ConfigProvider
-              theme={{
-                components: {
-                  Button: {
-                    defaultBg: '#e6f4ff',
-                    defaultColor: '#4081ff',
-                    defaultBorderColor: '#4081ff'
-                  },
-                },
-              }}
+          <div className="detect-btn-container">
+            <Button
+              className="detect-btn"
+              size="large"
+              htmlType="submit"
+              disabled={isListening || isDetecting}
             >
-              <Button className='detect-btn'
-                size='large'
-                htmlType='submit'
-              >
-                Detect
-              </Button>
-            </ConfigProvider>
+              {isDetecting ? <LoadingOutlined /> : "Detect"}
+            </Button>
           </div>
         </Form>
       </ConfigProvider>
     </div>
-  )
-}
+  );
+};
 
-export default Detection
+export default Detection;
