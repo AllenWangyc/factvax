@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit"
-import { parseJsonCookies } from '@/utils'
+import { parseJsonCookies, generateDeviceId } from '@/utils'
 import { loginAPI, loginByGoogleAPI, loginByGithubAPI, logoutAPI } from '@/apis'
 
 const userInfo = parseJsonCookies('userInfo')
@@ -10,6 +10,7 @@ const userStore = createSlice({
     isLogin: userInfo ? true : false,
     username: userInfo?.username || '',
     colorSeed: (userInfo?.randomNumber + 1) ? userInfo?.randomNumber : -1, // Use for Setting avator's color and bg color, the value from [0, 9]
+    device_id: '',
     detectCounter: 0,
   },
   reducers: {
@@ -22,6 +23,9 @@ const userStore = createSlice({
     setColorSeed(state, action) {
       state.colorSeed = action.payload
     },
+    setDeviceId(state) {
+      state.device_id = generateDeviceId()
+    },
     increaseDetectCounter(state) {
       state.detectCounter++
     },
@@ -30,17 +34,19 @@ const userStore = createSlice({
       state.username = ''
       state.colorSeed = -1
       state.isLogin = false
+      state.device_id = ''
     }
   }
 })
 
-const { setUsername, setColorSeed, increaseDetectCounter, logout, setLogin } = userStore.actions
+const { setUsername, setColorSeed, increaseDetectCounter, logout, setLogin, setDeviceId } = userStore.actions
 
 const fetchLogin = (loginForm) => {
   return async (dispatch) => {
     const res = await loginAPI(loginForm)
     console.log('Login response:', res)
     dispatch(setLogin())
+    dispatch(setDeviceId())
     if (res.username) {
       dispatch(setUsername(res.username))
     }
@@ -88,6 +94,6 @@ const fetchLogout = () => {
 
 const userReducer = userStore.reducer
 
-export { fetchLogin, fetchLoginByGoogle, fetchLoginByGithub, setColorSeed, logout, fetchLogout }
+export { fetchLogin, fetchLoginByGoogle, fetchLoginByGithub, fetchLogout, setColorSeed, logout, setDeviceId }
 
 export default userReducer

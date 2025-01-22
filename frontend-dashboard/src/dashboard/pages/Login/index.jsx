@@ -1,9 +1,9 @@
 import { Typography, Button, Input, Form, message } from 'antd'
 import { GoogleOutlined, GithubFilled } from '@ant-design/icons'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import './login.styl'
 import { useNavigate } from 'react-router-dom'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { fetchLogin, fetchLoginByGoogle, fetchLoginByGithub } from '@/store/modules/user'
 
 const Login = () => {
@@ -13,8 +13,28 @@ const Login = () => {
   const [email, setEmail] = useState('')
   const [pwd, setPwd] = useState('')
   const [loginError, setLoginError] = useState(false)
+
   const navigate = useNavigate()
   const dispatch = useDispatch()
+  const device_id = useSelector(state => state.user.device_id)
+
+  // Handle with sending message to extension content.js when device_id updated
+  useEffect(() => {
+    if (device_id) {
+      msgToExtension(device_id)
+    }
+  }, [device_id])
+
+  const msgToExtension = (device_id) => {
+    console.log(`The device id is ${device_id} in 'msgToExtension'`)
+    if (device_id) {
+      const event = new CustomEvent('sendMessageToExtension', {
+        detail: { device_id },
+      })
+      console.log(event)
+      window.dispatchEvent(event)
+    }
+  }
 
   const onClickSignup = () => {
     navigate('/dashboard/register')

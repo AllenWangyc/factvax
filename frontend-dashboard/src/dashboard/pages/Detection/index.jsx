@@ -1,91 +1,109 @@
-import "./detection.styl"
-import { Input, Typography, ConfigProvider, Button, Select, Form, message } from "antd"
-import { useState, useRef, useEffect } from "react"
-import { useNavigate } from "react-router-dom"
-import { detectAPI } from "@/apis"
-import { AudioOutlined, LoadingOutlined, PauseOutlined } from "@ant-design/icons"
+import "./detection.styl";
+import {
+  Input,
+  Typography,
+  ConfigProvider,
+  Button,
+  Select,
+  Form,
+  message,
+  Tooltip,
+} from "antd";
+import { useState, useRef, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { detectAPI } from "@/apis";
+import { AudioOutlined, LoadingOutlined, PauseOutlined } from "@ant-design/icons";
 
-{/* <PauseCircleFilled /> */ }
 const source_options = [
   { value: "X", label: "X" },
   { value: "Meta", label: "Meta" },
   { value: "Reddit", label: "Reddit" },
-]
+];
 
 const Detection = () => {
-  const { TextArea } = Input
-  const { Title } = Typography
-  const { Item } = Form
-  const navigate = useNavigate()
-  const formRef = useRef(null)
-  const [text, setText] = useState("")
-  const [isListening, setIsListening] = useState(false)
-  const [isDetecting, setIsDetecting] = useState(false)
+  const { TextArea } = Input;
+  const { Title } = Typography;
+  const { Item } = Form;
+  const navigate = useNavigate();
+  const formRef = useRef(null);
+  const recognitionRef = useRef(null);
 
-  const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)()
-  recognition.lang = "en-US"
-  recognition.interimResults = false
+  const [text, setText] = useState("");
+  const [isListening, setIsListening] = useState(false);
+  const [isDetecting, setIsDetecting] = useState(false);
+  const [isInfoVisible, setIsInfoVisible] = useState(true);
 
-  recognition.onresult = (event) => {
-    const speechToText = event.results[0][0].transcript
-    setText(speechToText)
-    setIsListening(false)
-    message.success(`Recognized: "${speechToText}"`)
-  }
+  // Initialize SpeechRecognition
+  useEffect(() => {
+    recognitionRef.current = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+    recognitionRef.current.lang = "en-US";
+    recognitionRef.current.interimResults = false;
 
-  recognition.onerror = (error) => {
-    if (error.error === "no-speech") {
-      console.warn("No speech detected. Microphone may have been idle.")
-      return // Ignore no-speech error
-    }
-    message.error(`Speech recognition error: ${error.error}`)
-    setIsListening(false)
-  }
+    recognitionRef.current.onresult = (event) => {
+      const speechToText = event.results[0][0].transcript;
+      setText((prevText) => `${prevText} ${speechToText}`);
+      setIsListening(false);
+      message.success(`Recognized: "${speechToText}"`);
+    };
 
-  const startListening = () => {
-    setIsListening(true)
-    recognition.start()
-  }
-
-  const stopListening = () => {
-    if (isListening) {
-      setIsListening(false)
-      recognition.abort()
-      recognition.onend = () => {
-        console.log("Microphone has been released successfully.")
-        message.info("Voice input paused and microphone released.")
+    recognitionRef.current.onerror = (error) => {
+      setIsListening(false);
+      if (error.error === "no-speech") {
+        console.warn("No speech detected.");
+        return;
       }
-    }
-  }
+      message.error(`Speech recognition error: ${error.error}`);
+    };
 
-  // useEffect(() => {
-  //   return () => {
-  //     recognition.onresult = null
-  //     recognition.onerror = null
-  //     recognition.onend = null; // Unbind event
-  //     recognition.abort(); // Forcedly release resource
-  //     message.info("Speech recognition stopped.");
-  //   }
-  // }, [])
+    recognitionRef.current.onend = () => {
+      setIsListening(false);
+    };
 
+    return () => {
+      recognitionRef.current.abort();
+      recognitionRef.current = null;
+    };
+  }, []);
+
+  // Start listening
+  const startListening = () => {
+    setIsListening(true);
+    recognitionRef.current.start();
+  };
+
+  // Stop listening
+  const stopListening = () => {
+    setIsListening(false);
+    recognitionRef.current.abort();
+    message.info("Voice input paused and microphone released.");
+  };
+
+  // Handle detection
   const handleDetect = async (values) => {
-    const { source } = values
+    const { source } = values;
     if (!text.trim()) {
-      message.warning("Please enter or speak text to detect.")
-      return
+      message.warning("Please enter or speak text to detect.");
+      return;
     }
 
-    setIsDetecting(true)
+    setIsDetecting(true);
     try {
-      const data = { source, text }
-      const res = await detectAPI(data)
-      navigate(`/dashboard/result/${res.response._id}`)
+      const data = { source, text };
+      const res = await detectAPI(data);
+      navigate(`/dashboard/result/${res.response._id}`);
     } catch (err) {
-      message.error("Detection failed")
+      message.error("Detection failed");
     } finally {
-      setIsDetecting(false)
+      setIsDetecting(false);
     }
   };
+
+  // Placeholder text based on state
+  const placeholderText = isListening
+    ? "Listening for your input..."
+    : isDetecting
+      ? "Detecting text..."
+      : "Please enter the vaccine information";
 
   return (
     <div className="P-detection">
@@ -95,9 +113,14 @@ const Detection = () => {
           onFinish={handleDetect}
           ref={formRef}
         >
+          {/* Title */}
           <div className="detect-title-wrapper">
-            <Title level={1} className="detect-title">FactVax Detection</Title>
+            <Title level={1} className="detect-title">
+              FactVax Detection
+            </Title>
           </div>
+
+          {/* Source selection */}
           <div className="datasource-wrapper">
             <Item
               className="datasource-item"
@@ -115,45 +138,71 @@ const Detection = () => {
               />
             </Item>
           </div>
-          <div className="detect-text-area-wrapper">
-            {isListening ? (
-              <div className="listening-animation">Listening...</div>
-            ) : isDetecting ? (
-              <div className="listening-animation">Detecting...</div>
-            ) : (
-              <TextArea
-                className="detect-text-area"
-                placeholder="Please enter the vaccine information"
-                value={text}
-                onChange={(e) => setText(e.target.value)}
-              />
+
+          {/* Text Area and Voice Button */}
+          <div className="detect-text-area-wrapper" style={{ position: "relative" }}>
+            {/* 检测进度条 */}
+            {isDetecting && (
+              <div className="detect-progress-bar">
+                <div className="progress" />
+              </div>
             )}
 
-            {/**
-             * Voice input button displayed when neither listening nor detecting
-             */}
-            {!isListening && !isDetecting && (
-              <Button
-                className="voice-input-btn"
-                type="primary"
-                icon={<AudioOutlined />}
-                onClick={startListening}
-                style={{ position: "absolute", right: "10px", bottom: "10px" }}
-              />
+            {/* 文本框 */}
+            <TextArea
+              className={`detect-text-area ${isListening ? "listening" : ""} ${isDetecting ? "detecting" : ""
+                }`}
+              placeholder={placeholderText}
+              value={text}
+              onChange={(e) => setText(e.target.value)}
+            />
+
+            {/* Text hint */}
+            {isInfoVisible && !text && !isListening && !isDetecting && (
+              <div className="info-bubble" style={{ position: "absolute", bottom: "-35px", left: "0px" }}>
+                <span>
+                  💡 You can type or use voice input to enter the vaccine information!
+                </span>
+                {/* Close button */}
+                <button
+                  style={{
+                    marginLeft: "10px",
+                    background: "none",
+                    border: "none",
+                    color: "#888",
+                    cursor: "pointer",
+                    fontSize: "16px",
+                  }}
+                  onClick={() => setIsInfoVisible(false)} // Hidden hint box when button clicked
+                >
+                  ×
+                </button>
+              </div>
             )}
 
-            {/**
-             * Voice pause button displayed when neither listening nor detecting
-             */}
-            {isListening && !isDetecting && (
-              <Button
-                className="voice-pause-btn"
-                icon={<PauseOutlined />}
-                onClick={stopListening}
-                style={{ position: "absolute", right: "10px", bottom: "10px" }}
-              />
-            )}
+            {/* Voice button */}
+            <div
+              className="voice-btn-container"
+              style={{ position: "absolute", right: "10px", bottom: "10px" }}
+            >
+              {isListening ? (
+                <Button
+                  className="voice-pause-btn"
+                  icon={<PauseOutlined />}
+                  onClick={stopListening}
+                />
+              ) : (
+                <Button
+                  className="voice-input-btn"
+                  type="primary"
+                  icon={<AudioOutlined />}
+                  onClick={startListening}
+                />
+              )}
+            </div>
           </div>
+
+          {/* Detect Button */}
           <div className="detect-btn-container">
             <Button
               className="detect-btn"

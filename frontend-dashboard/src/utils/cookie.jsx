@@ -12,6 +12,7 @@ function getCookieValue(name) {
 
 export function parseJsonCookies(name) {
   const value = getCookieValue(name)
+  console.log(value)
 
   if (value) {
     try {
