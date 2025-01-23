@@ -28,7 +28,7 @@
   "web_accessible_resources": [
     {
       "resources": [
-        "/images/app.png"
+        "/images/*"
       ],
       "matches": [
         "<all_urls>"
@@ -46,17 +46,17 @@
   "action": {
     "default_popup": "index.html",
     "default_icon": {
-      "16": "/images/app.png",
-      "32": "/images/app.png",
-      "48": "/images/app.png",
-      "128": "/images/app.png"
+      "16": "/images/vaccine_icon.png",
+      "32": "/images/vaccine_icon.png",
+      "48": "/images/vaccine_icon.png",
+      "128": "/images/vaccine_icon.png"
     },
     "default_title": "FactVex"
   },
   "icons": {
-    "16": "/images/app.png",
-    "32": "/images/app.png",
-    "48": "/images/app.png",
-    "128": "/images/app.png"
+    "16": "/images/vaccine_icon.png",
+    "32": "/images/vaccine_icon.png",
+    "48": "/images/vaccine_icon.png",
+    "128": "/images/vaccine_icon.png"
   }
 }

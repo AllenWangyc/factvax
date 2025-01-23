@@ -23,6 +23,10 @@ function apiRequest(config) {
   let headers = {}
   let data = null
 
+  if (config.token) {
+    headers['Authorization'] = `Bearer ${config.token}`
+  }
+
   if (config.formData) {
     // Compatibility process
     data = new FormData()
@@ -40,6 +44,8 @@ function apiRequest(config) {
     headers,
     ...(config.method.toLowerCase() === 'get' ? {} : { body: data }),
   }
+
+  console.log(axiosConfig);
 
   fetch(config.url, axiosConfig)
     .then((res) => res.json())

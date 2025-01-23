@@ -1,9 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import '@/common/styles/frame.styl'
-import router from '@/router'
 import store from '@/store'
-import { RouterProvider } from 'react-router-dom'
 import { Provider } from 'react-redux'
 import Popup from '@/popup'
 
@@ -11,7 +9,6 @@ import Popup from '@/popup'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <Provider store={store}>
-    {/* <RouterProvider router={router} /> */}
     <Popup />
   </Provider>
 )

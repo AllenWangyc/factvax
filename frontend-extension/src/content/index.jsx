@@ -1,8 +1,11 @@
-import ReactDOM from 'react-dom/client'
-import DetectionPanel from './pages/DetectionPanel'
+import './components/FloatingIcon'
+import { createPanel } from './utils'
 
+/**
+ * Handle the event when the item in the context menu is clicked
+ */
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-  if (message.type === "showPopup") {
+  if (message.type === "getText") {
     const text = message.text
 
     if (document.getElementById("popup-container")) {
@@ -10,25 +13,19 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       return
     }
 
-    // Create a div element with id 'popup-container'
-    const popupContainer = document.createElement('div')
-    popupContainer.id = 'popup-container'
-
-    // Append this element to the end of document
-    document.body.appendChild(popupContainer)
-
-    const reactPopupContainer = ReactDOM.createRoot(popupContainer)
-    reactPopupContainer.render(
-      <DetectionPanel
-        text={text}
-        onClose={() => {
-          // Unmount the ReactDOM and remove container when click button
-          reactPopupContainer.unmount() // Unmount component
-          popupContainer.remove() // Remove container
-        }}
-      />
-    )
+    createPanel(text)
 
     sendResponse({ status: "success" })
+  }
+})
+
+/**
+ * Listen to customized event sent from dashboard 
+ */
+window.addEventListener('sendMessageToExtension', function (event) {
+  const data = event.detail
+  if (data.device_id) {
+    // Relay data to background 
+    chrome.runtime.sendMessage({ device_id: data.device_id })
   }
 })

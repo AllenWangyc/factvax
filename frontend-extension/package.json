@@ -12,6 +12,7 @@
   "dependencies": {
     "@ant-design/icons": "^5.5.2",
     "@reduxjs/toolkit": "^2.5.0",
+    "@vespaiach/axios-fetch-adapter": "^0.3.1",
     "antd": "^5.22.2",
     "antd-style": "^3.7.1",
     "axios": "^1.7.9",

@@ -3,6 +3,8 @@ import { Typography } from 'antd'
 import { CheckCircleTwoTone, CloseCircleTwoTone, LoadingOutlined, InfoCircleTwoTone } from "@ant-design/icons"
 import { useEffect, useState } from 'react'
 import './DetectionPanel.styl'
+import { useDispatch } from 'react-redux'
+import { increaseDetectCounter } from '@/store/modules/user'
 
 export default function DetectionPanel({ onClose, text }) {
   const MISLEADING = 'Misleading'
@@ -12,23 +14,46 @@ export default function DetectionPanel({ onClose, text }) {
   const [loading, setLoading] = useState(true)
   const [related, setRelated] = useState(false)
 
+  const dispatch = useDispatch()
+
   const { Title } = Typography
 
+  /**
+   * Get token from chrome storage
+   * @returns Promise used for futher resolving in fetchDetection
+   */
+  const getToken = () => {
+    return new Promise((resolve, reject) => {
+      chrome.storage.local.get(['token'], function (result) {
+        if (chrome.runtime.lastError) {
+          reject(chrome.runtime.lastError)
+        } else {
+          resolve(result.token)
+        }
+      })
+    })
+  }
+
+
   useEffect(() => {
+
     const fetchDetection = async () => {
+      const token = await getToken()
+      console.log('Using token:', token)
+
       try {
-        const res = await apiReqs.detect({
-          data: {
-            text
-          }
-        })
-        console.log(res)
+        const config = {
+          data: { text },
+          ...(token && { token })
+        }
+        const res = await apiReqs.detect(config)
 
         // Update the information
         setLoading(false)
 
         // Receive response and response including result property
         if (res.response) {
+          dispatch(increaseDetectCounter())
           // The selected text is related to vaccine info
           if (res.response.related) {
             setRelated(true)

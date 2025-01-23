@@ -1,7 +1,6 @@
 /* global chrome */
 
 import { apiFetch } from '@/apis/apiConfig.jsx'
-import { request } from '@/utils'
 
 // const API_DOMAIN = 'http://localhost:5050/'
 const API_DOMAIN = 'https://fact-vax-app-e8d263b7267d.herokuapp.com/'
@@ -11,7 +10,7 @@ export const API_CODE = {
   OK: 200,
   // API success, data exception
   ERR_DATA: 403,
-  // API success, data empty
+  // API success, data <empty></empty>
   ERR_NO_DATA: 301,
   // API success, login exception
   ERR_LOGOUT: 401
@@ -22,85 +21,27 @@ export const API_FAILED = 'There is something wrong with net connection, please 
 
 // API integration
 export const apiReqs = {
-  // Login with Google account
-  signInByGithub: (config) => {
-    return new Promise((resolve, reject) => {
-      config.url = API_DOMAIN + 'auth/github/'
-      config.method = 'get'
-      apiFetch(config)
-    })
-  },
-  // Signup
-  signUp: (config) => {
-    return new Promise((resolve, reject) => {
-      config.url = API_DOMAIN + 'api/register/'
-      config.method = 'post'
-      config.success = (res) => {
-        resolve(res)
-      }
-      apiFetch(config)
-    })
-  },
   // Detect text
   detect: (config) => {
     return new Promise((resolve, reject) => {
       config.url = API_DOMAIN + 'api/detect_text/default/'
       config.method = 'post'
-
       config.success = (res) => {
         resolve(res)
       }
       apiFetch(config)
     })
   },
-  // Fetch all history records
-  getHistory: (config) => {
-    return new Promise((resolve, reject) => {
-      config.url = API_DOMAIN + 'api/history/user_history'
-      config.method = 'get'
+  getTokenByDeviceId: (config) => {
+    console.log('The API url is: ' + API_DOMAIN + `api/user/device?deviceId=${config.deviceId}`)
 
+    return new Promise((resolve, reject) => {
+      config.url = API_DOMAIN + `api/user/device?deviceId=${config.deviceId}`
+      config.method = 'get'
       config.success = (res) => {
         resolve(res)
       }
       apiFetch(config)
     })
   }
-}
-
-export function historyFetchAPI() {
-  return request({
-    url: `/api/history/user_history`,
-    method: 'GET'
-  })
-}
-
-export function signUpAPI(formData) {
-  return request({
-    url: '/register/',
-    method: 'POST',
-    data: formData
-  })
-}
-
-export function loginAPI(formData) {
-  return request({
-    url: '/login/',
-    method: 'POST',
-    data: formData
-  })
-}
-
-export function detectAPI(data) {
-  return request({
-    url: '/api/detect_text/',
-    method: 'POST',
-    data: data
-  })
-}
-
-export function deleteRecordAPI(id) {
-  return request({
-    url: `/api/history/delete_record/${id}`,
-    method: 'DELETE',
-  })
 }
