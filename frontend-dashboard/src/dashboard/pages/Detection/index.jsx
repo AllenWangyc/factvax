@@ -219,4 +219,4 @@ const Detection = () => {
   );
 };
 
-export default Detection;
+export default Detection

@@ -108,47 +108,54 @@ export function userMisinfoRatioFetchByIDAPI() {
   return request({
     url: `/api/history/misinfo`,
     method: 'GET',
-  });
+  })
 }
 
 export function userPlatformMisinfoRatioFetchByIDAPI() {
   return request({
     url: `/api/history/platform_data`,
     method: 'GET',
-  });
+  })
 }
 
 export function userVaccineMisinfoRatioFetchByIDAPI() {
   return request({
     url: `/api/history/vax_times`,
     method: 'GET',
-  });
+  })
 }
 
 export function userVaccineCheckNumFetchByIDAPI() {
   return request({
     url: `/api/history/total_num`,
     method: 'GET',
-  });
+  })
 }
 
 export function userVaccineMisinfoNumFetchByIDAPI() {
   return request({
     url: `/api/history/total_misinfo`,
     method: 'GET',
-  });
+  })
 }
 
 export function userVaccineDataSourceFetchByIDAPI() {
   return request({
     url: `/api/history/data_source`,
     method: 'GET',
-  });
+  })
 }
 
 export function userMisinfoRatioInDaysFetchByIDAPI() {
   return request({
     url: `/api/history/misinfo_rate_day`,
     method: 'GET',
-  });
+  })
+}
+
+export function getTokenByDeviceIdAPI(device_id) {
+  return request({
+    url: `/api/user/addId?deviceId=${device_id}`,
+    method: 'GET'
+  })
 }

@@ -5,6 +5,7 @@ import './login.styl'
 import { useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { fetchLogin, fetchLoginByGoogle, fetchLoginByGithub } from '@/store/modules/user'
+import { getTokenByDeviceIdAPI } from '@/apis'
 
 const Login = () => {
   const { Title } = Typography
@@ -20,8 +21,12 @@ const Login = () => {
 
   // Handle with sending message to extension content.js when device_id updated
   useEffect(() => {
-    if (device_id) {
+    async function sendDeviceId(device_id) {
+      await getTokenByDeviceIdAPI(device_id)
       msgToExtension(device_id)
+    }
+    if (device_id) {
+      sendDeviceId(device_id)
     }
   }, [device_id])
 
@@ -31,7 +36,6 @@ const Login = () => {
       const event = new CustomEvent('sendMessageToExtension', {
         detail: { device_id },
       })
-      console.log(event)
       window.dispatchEvent(event)
     }
   }
