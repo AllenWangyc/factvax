@@ -4,7 +4,6 @@ import { CheckCircleTwoTone, CloseCircleTwoTone, LoadingOutlined, InfoCircleTwoT
 import { useEffect, useState } from 'react'
 import './DetectionPanel.styl'
 import { useDispatch } from 'react-redux'
-import { increaseDetectCounter } from '@/store/modules/user'
 
 export default function DetectionPanel({ onClose, text }) {
   const MISLEADING = 'Misleading'
@@ -53,18 +52,17 @@ export default function DetectionPanel({ onClose, text }) {
 
         // Receive response and response including result property
         if (res.response) {
-          dispatch(increaseDetectCounter())
           // The selected text is related to vaccine info
-          if (res.response.related) {
+          if (res.response.result.related) {
             setRelated(true)
             // Selected text are credible
-            if (res.response.classification === 'accurate') {
+            if (res.response.result.classification === 'accurate') {
               setResult(CREDIBLE)
             }
             // Selected text is misleading
             else {
               setResult(MISLEADING)
-              setExplaination(res.response.correction)
+              setExplaination(res.response.result.correction)
             }
           }
           // Selected text is not related to vaccine info

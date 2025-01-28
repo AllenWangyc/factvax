@@ -1,21 +1,40 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import './popup.styl'
 import { Layout, Switch, Button, Typography, Modal } from 'antd'
 import { AntDesignOutlined, LockOutlined, MailOutlined } from '@ant-design/icons'
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+// import { setUsername } from '@/store/modules/user';
 
 const isGmailUser = () => {
   return (
     navigator.userAgent.toLowerCase().includes('chrome') &&
     !navigator.userAgent.toLowerCase().includes('edge')
-  );
-};
+  )
+}
 
 function Popup() {
   const { Content, Header, Footer } = Layout
   const { Title, Text } = Typography
   const [isPrivacyModalVisible, setPrivacyModalVisible] = useState(false)
-  const detectCounter = useSelector(state => state.user.detectCounter)
+  // const { detectCounter, username } = useSelector(state => state.user)
+  const [counter, setCounter] = useState(0)
+  useEffect(() => {
+    // 监听来自 content script 的消息
+    const messageListener = (message, sender, sendResponse) => {
+      if (message.type === "INCREMENT_COUNTER") {
+        setCounter((prevCounter) => prevCounter + 1); // 更新 counter
+        sendResponse({ success: true }); // 可选：返回响应
+      }
+    };
+
+    chrome.runtime.onMessage.addListener(messageListener);
+
+    // 清理消息监听器
+    return () => {
+      chrome.runtime.onMessage.removeListener(messageListener);
+    };
+  }, []);
+
 
   const handlePrivacyClick = () => {
     setPrivacyModalVisible(true);
@@ -29,7 +48,7 @@ function Popup() {
     <Layout className="P-layout">
       {/* Header */}
       <Header className="header">
-        <Title className="title">FactVax</Title>
+        <Title className="title">FactVax {username}</Title>
         <div className="logo">
           <img src={"/images/vaccine_icon.png"} alt="Logo" />
         </div>
@@ -48,7 +67,7 @@ function Popup() {
           </div>
         </div>
         <Text className="misinformation-text">
-          FactVax has detected misinformation {detectCounter} times for you.
+          FactVax has detected misinformation {counter} times for you.
         </Text>
         <Button
           type="primary"
@@ -246,11 +265,9 @@ function Popup() {
                 display: 'inline', // 确保链接和文字一致
               }}
             >
-              carlfish666@gmail.com
+              clientservice@factvax.com
             </a>.
           </p>
-
-
         </div>
       </Modal>
 

@@ -1,27 +1,29 @@
 import { createSlice } from "@reduxjs/toolkit"
 
-const userStore = createSlice({
-  name: 'user',
-  initialState: {
-    isLogin: false,
-    username: '',
-    token: '',
-    detectCounter: 0,
-  },
+// Initialate state
+const initialState = {
+  userInfo: null,
+  isLoggedIn: false,
+};
+
+// Create user slice
+const userSlice = createSlice({
+  name: "user",
+  initialState,
   reducers: {
-    setLogin(state) {
-      state.isLogin = true
+    setUser(state, action) {
+      state.userInfo = action.payload
+      state.isLoggedIn = true
     },
-    increaseDetectCounter(state) {
-      state.detectCounter++
+    logout(state) {
+      state.userInfo = null
+      state.isLoggedIn = false
     },
-  }
+    initUserState(state, action) {
+      return { ...state, ...action.payload } // Use to initialate state in background script
+    },
+  },
 })
 
-const { increaseDetectCounter, setLogin } = userStore.actions
-
-export { increaseDetectCounter }
-
-const userReducer = userStore.reducer
-
-export default userReducer
+export const { setUser, logout, initUserState } = userSlice.actions
+export default userSlice.reducer

@@ -30,6 +30,9 @@ export default defineConfig({
   },
   build: {
     outDir: CRX_OUTDIR,
+    rollupOptions: {
+      external: ['fsevents'], // 将 fsevents 标记为外部依赖
+    },
   },
   plugins: [react()],
 })

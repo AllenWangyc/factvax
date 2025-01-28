@@ -32,11 +32,21 @@ export const apiReqs = {
       apiFetch(config)
     })
   },
+  // Get token by device_id
   getTokenByDeviceId: (config) => {
-    console.log('The API url is: ' + API_DOMAIN + `api/user/device?deviceId=${config.deviceId}`)
-
     return new Promise((resolve, reject) => {
       config.url = API_DOMAIN + `api/user/device?deviceId=${config.deviceId}`
+      config.method = 'get'
+      config.success = (res) => {
+        resolve(res)
+      }
+      apiFetch(config)
+    })
+  },
+  // Get username by token
+  getUsernameByToken: (config) => {
+    return new Promise((resolve, reject) => {
+      config.url = API_DOMAIN + `api/user/user_name`
       config.method = 'get'
       config.success = (res) => {
         resolve(res)
