@@ -1,14 +1,6 @@
 /*global chrome*/
 
 import { apiReqs } from "@/apis"
-import { send } from "vite"
-
-let globalState = {
-  user: {
-    userInfo: null,
-    isLoggedIn: false,
-  },
-}
 
 /**
  * Set rules for extension execution
@@ -21,6 +13,9 @@ chrome.runtime.onInstalled.addListener(function () {
       conditions: [
         new chrome.declarativeContent.PageStateMatcher({
           pageUrl: {
+            // Match all urls start with 'www.'
+            // hostPrefix: 'www.'
+
             // Match all pages with https
             schemes: ['https']
           },
@@ -59,7 +54,7 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
 
 /**
  * Process login status synchronization relayed from content.js
- * @returns {true} means the response is asynchronous
+ * @returns {true}, means the response is asynchronous
  */
 chrome.runtime.onMessage.addListener(async function (message, sender, sendResponse) {
   if (message.device_id) {
@@ -88,13 +83,7 @@ chrome.runtime.onMessage.addListener(async function (message, sender, sendRespon
     }
     return true
   }
-  // if (message.username) {
-  //   const username = message.username
-  //   console.log('Received username from content script:', username)
-  // }
-  // return true
 })
-
 
 /**
  * Fetch token by device_id when extension starts up
@@ -121,24 +110,4 @@ chrome.runtime.onStartup.addListener(function () {
       console.warn('No device_id found in chrome.storage on startup.')
     }
   })
-})
-
-/**
- * Synchronize the global state between content script and popup
- */
-chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-  if (message.type === "GET_STATE") {
-    sendResponse(globalState) // Return current global state
-  }
-
-  if (message.type === 'SET_STATE') {
-    const { module, state } = message.payload
-    if (module in globalState) {
-      globalState[module] = {
-        ...globalState[module], // Update the specified module state
-        ...state
-      }
-    }
-    sendResponse({ success: true })
-  }
 })
