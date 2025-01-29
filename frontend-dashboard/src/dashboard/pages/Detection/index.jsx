@@ -52,7 +52,7 @@ const Detection = () => {
         console.warn("No speech detected.");
         return;
       }
-      message.error(`Speech recognition error: ${error.error}`);
+      // message.error(`Speech recognition error: ${error.error}`);
     };
 
     recognitionRef.current.onend = () => {
@@ -75,7 +75,7 @@ const Detection = () => {
   const stopListening = () => {
     setIsListening(false);
     recognitionRef.current.abort();
-    message.info("Voice input paused and microphone released.");
+    // message.info("Voice input paused and microphone released.");
   };
 
   // Handle detection
@@ -90,6 +90,8 @@ const Detection = () => {
     try {
       const data = { source, text };
       const res = await detectAPI(data);
+      console.log(res);
+
       navigate(`/dashboard/result/${res.response._id}`);
     } catch (err) {
       message.error("Detection failed");

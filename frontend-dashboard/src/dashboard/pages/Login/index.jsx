@@ -17,24 +17,24 @@ const Login = () => {
 
   const navigate = useNavigate()
   const dispatch = useDispatch()
-  const device_id = useSelector(state => state.user.device_id)
+  const { device_id, username } = useSelector(state => state.user)
 
   // Handle with sending message to extension content.js when device_id updated
   useEffect(() => {
     async function sendDeviceId(device_id) {
       await getTokenByDeviceIdAPI(device_id)
-      msgToExtension(device_id)
+      msgToExtensionLogin(device_id)
     }
     if (device_id) {
       sendDeviceId(device_id)
     }
   }, [device_id])
 
-  const msgToExtension = (device_id) => {
+  const msgToExtensionLogin = (device_id) => {
     console.log(`The device id is ${device_id} in 'msgToExtension'`)
     if (device_id) {
-      const event = new CustomEvent('sendMessageToExtension', {
-        detail: { device_id },
+      const event = new CustomEvent('sendMessageToExtensionLogin', {
+        detail: { device_id, username },
       })
       window.dispatchEvent(event)
     }

@@ -10,11 +10,11 @@ export function historyFetchAPI() {
 }
 
 // Register
-export function signUpAPI(formData) {
+export function signUpAPI(data) {
   return request({
     url: '/api/user/register/',
     method: 'POST',
-    data: formData
+    data: data
   })
 }
 
@@ -157,5 +157,13 @@ export function getTokenByDeviceIdAPI(device_id) {
   return request({
     url: `/api/user/addId?deviceId=${device_id}`,
     method: 'GET'
+  })
+}
+
+export function emailVerifyAPI(formData) {
+  return request({
+    url: '/api/user/verify/',
+    method: 'POST',
+    data: formData
   })
 }

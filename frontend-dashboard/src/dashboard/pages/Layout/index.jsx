@@ -33,14 +33,17 @@ const DashboardLayout = () => {
   const { username, colorSeed } = useSelector(state => state.user)
   const dispatch = useDispatch()
 
+  const msgToExtensionLogout = () => {
+    console.log('Logout event registered')
+    const event = new CustomEvent('sendMessageToExtensionLogout')
+    window.dispatchEvent(event)
+  }
+
   // Get the current pathname
   const selectedKey = location.pathname
   const isLogin = useSelector(state => state.user.isLogin)
 
-  // Randomly generate color assortment of avatar font color and bg color
-
   /**
-   * 
    * @param {Object} route, An object that has all properties of the clickede menu item.
    */
   const onMenuClick = (route) => {
@@ -48,7 +51,6 @@ const DashboardLayout = () => {
   }
 
   /**
-   * 
    * @param {String} username, username stored in global state
    * @returns {String} A new string that consists of the first letter of each word in the username
    */
@@ -60,6 +62,7 @@ const DashboardLayout = () => {
 
   const handleLogout = async () => {
     await dispatch(fetchLogout())
+    msgToExtensionLogout()
     navigate('/dashboard/login')
   }
 

@@ -45,14 +45,14 @@ const fetchLogin = (loginForm) => {
   return async (dispatch) => {
     const res = await loginAPI(loginForm)
     console.log('Login response:', res)
-    dispatch(setLogin())
-    dispatch(setDeviceId())
     if (res.username) {
       dispatch(setUsername(res.username))
     }
     if (res.colorSeed || res.colorSeed === 0) {
       dispatch(setColorSeed(res.colorSeed))
     }
+    dispatch(setLogin())
+    dispatch(setDeviceId())
   }
 }
 
