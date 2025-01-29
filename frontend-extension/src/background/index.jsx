@@ -2,6 +2,9 @@
 
 import { apiReqs } from "@/apis"
 
+let messageQueue = []
+let popupPort = null
+
 /**
  * Set rules for extension execution
  */
@@ -82,6 +85,38 @@ chrome.runtime.onMessage.addListener(async function (message, sender, sendRespon
       console.error('Failed to retrieve token:', res)
     }
     return true
+  }
+})
+
+/**
+ * Cached the message send from content script and relay to popup to increase counter
+ */
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  if (message.type === 'INCREMENT_COUNTER') {
+    if (popupPort) {
+      popupPort.postMessage(message)
+      console.log('The message posted to popup.')
+    } else {
+      messageQueue.push(message)
+      console.log('The message has been cached in messageQueue.')
+    }
+    sendResponse({ success: true })
+  }
+})
+
+/**
+ * Listen to the connection between background script and popup
+ */
+chrome.runtime.onConnect.addListener((port) => {
+  if (port.name === 'popup') {
+    popupPort = port
+
+    messageQueue.forEach((queuedMessage => popupPort.postMessage(queuedMessage)))
+    messageQueue = []
+
+    popupPort.onDisconnect.addListener(() => {
+      popupPort = null
+    })
   }
 })
 

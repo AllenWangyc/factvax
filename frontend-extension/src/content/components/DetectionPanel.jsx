@@ -3,7 +3,6 @@ import { Typography } from 'antd'
 import { CheckCircleTwoTone, CloseCircleTwoTone, LoadingOutlined, InfoCircleTwoTone } from "@ant-design/icons"
 import { useEffect, useState } from 'react'
 import './DetectionPanel.styl'
-import { useDispatch } from 'react-redux'
 
 export default function DetectionPanel({ onClose, text }) {
   const MISLEADING = 'Misleading'
@@ -13,7 +12,6 @@ export default function DetectionPanel({ onClose, text }) {
   const [loading, setLoading] = useState(true)
   const [related, setRelated] = useState(false)
 
-  const dispatch = useDispatch()
 
   const { Title } = Typography
 
@@ -46,6 +44,7 @@ export default function DetectionPanel({ onClose, text }) {
           ...(token && { token })
         }
         const res = await apiReqs.detect(config)
+        console.log(`The detectionPanel response is `, res)
 
         // Update the information
         setLoading(false)
@@ -53,16 +52,16 @@ export default function DetectionPanel({ onClose, text }) {
         // Receive response and response including result property
         if (res.response) {
           // The selected text is related to vaccine info
-          if (res.response.result.related) {
+          if (res.response.related) {
             setRelated(true)
             // Selected text are credible
-            if (res.response.result.classification === 'accurate') {
+            if (res.response.classification === 'accurate') {
               setResult(CREDIBLE)
             }
             // Selected text is misleading
             else {
               setResult(MISLEADING)
-              setExplaination(res.response.result.correction)
+              setExplaination(res.response.correction)
             }
           }
           // Selected text is not related to vaccine info

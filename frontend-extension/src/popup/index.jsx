@@ -1,8 +1,7 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import './popup.styl'
 import { Layout, Switch, Button, Typography, Modal } from 'antd'
 import { AntDesignOutlined, LockOutlined, MailOutlined } from '@ant-design/icons'
-import { useSelector } from 'react-redux';
 
 const isGmailUser = () => {
   return (
@@ -15,7 +14,47 @@ function Popup() {
   const { Content, Header, Footer } = Layout
   const { Title, Text } = Typography
   const [isPrivacyModalVisible, setPrivacyModalVisible] = useState(false)
-  const detectCounter = useSelector(state => state.user.detectCounter)
+  const [counter, setCounter] = useState(0)
+
+  useEffect(() => {
+    const port = chrome.runtime.connect({ name: "popup" })
+
+    chrome.storage.local.get('counter', (result) => {
+      if (counter !== undefined) {
+        setCounter(result.counter)
+      }
+    })
+
+    port.onMessage.addListener((message) => {
+      if (message.type === "INCREMENT_COUNTER") {
+        setCounter((prevCounter) => {
+          const newCounter = prevCounter + 1
+          chrome.storage.local.set({ counter: newCounter })
+          return newCounter
+        }) // 更新 counter
+      }
+    });
+
+    // 监听来自 content script 的消息
+    // const messageListener = (message, sender, sendResponse) => {
+    //   if (message.type === "INCREMENT_COUNTER") {
+    //     setCounter((prevCounter) => {
+    //       const newCounter = prevCounter + 1
+    //       chrome.storage.local.set({ counter: newCounter })
+    //       return newCounter
+    //     }) // 更新 counter
+    //     sendResponse({ success: true }); // 可选：返回响应
+    //   }
+    // };
+
+    // chrome.runtime.onMessage.addListener(messageListener);
+
+    // 清理消息监听器
+    return () => {
+      port.disconnect();
+      // chrome.runtime.onMessage.removeListener(messageListener);
+    };
+  }, []);
 
   const handlePrivacyClick = () => {
     setPrivacyModalVisible(true);
@@ -48,7 +87,7 @@ function Popup() {
           </div>
         </div>
         <Text className="misinformation-text">
-          FactVax has detected misinformation {detectCounter} times for you.
+          FactVax has detected misinformation {counter} times for you.
         </Text>
         <Button
           type="primary"

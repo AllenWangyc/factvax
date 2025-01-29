@@ -1,14 +1,17 @@
 import './components/FloatingIcon'
 import { createPanel } from './utils'
 
-const notifyPopupToIncrement = () => {
+/**
+ * Send message to popup to increase counter
+ */
+const notifyCounterToIncrement = () => {
   chrome.runtime.sendMessage(
     { type: "INCREMENT_COUNTER" },
     (response) => {
       if (response?.success) {
-        console.log("Counter incremented in popup!");
+        console.log("Counter incremented in background script!");
       } else {
-        console.error("Failed to increment counter in popup.");
+        console.error("Failed to increment counter in background script.");
       }
     }
   );
@@ -26,9 +29,8 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       return
     }
 
+    notifyCounterToIncrement()
     createPanel(text)
-    notifyPopupToIncrement()
-
     sendResponse({ status: "success" })
   }
 })
@@ -45,3 +47,4 @@ window.addEventListener('sendMessageToExtension', function (event) {
     chrome.runtime.sendMessage({ device_id: data.device_id, username: data.username })
   }
 })
+
