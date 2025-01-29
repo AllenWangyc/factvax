@@ -16,11 +16,7 @@ chrome.runtime.onInstalled.addListener(function () {
       conditions: [
         new chrome.declarativeContent.PageStateMatcher({
           pageUrl: {
-            // Match all urls start with 'www.'
-            // hostPrefix: 'www.'
-
-            // Match all pages with https
-            schemes: ['https']
+            schemes: ['https'] // Match all pages with https
           },
         }),
       ],
@@ -84,8 +80,14 @@ chrome.runtime.onMessage.addListener(async function (message, sender, sendRespon
     } else {
       console.error('Failed to retrieve token:', res)
     }
-    return true
   }
+  if (message.username) {
+    const username = message.username
+    await chrome.storage.local.set({ username }, function () {
+      console.log('username stored in chrome storage')
+    })
+  }
+  return true
 })
 
 /**

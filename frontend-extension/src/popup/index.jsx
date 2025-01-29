@@ -1,60 +1,61 @@
 import React, { useState, useEffect } from 'react'
 import './popup.styl'
 import { Layout, Switch, Button, Typography, Modal } from 'antd'
-import { AntDesignOutlined, LockOutlined, MailOutlined } from '@ant-design/icons'
+import { AntDesignOutlined, LockOutlined, MailOutlined, LoginOutlined } from '@ant-design/icons'
+{/* <LoginOutlined /> */ }
 
 const isGmailUser = () => {
   return (
     navigator.userAgent.toLowerCase().includes('chrome') &&
     !navigator.userAgent.toLowerCase().includes('edge')
-  );
-};
+  )
+}
 
 function Popup() {
   const { Content, Header, Footer } = Layout
   const { Title, Text } = Typography
   const [isPrivacyModalVisible, setPrivacyModalVisible] = useState(false)
   const [counter, setCounter] = useState(0)
+  const [username, setUsername] = useState(null)
 
   useEffect(() => {
     const port = chrome.runtime.connect({ name: "popup" })
 
     chrome.storage.local.get('counter', (result) => {
-      if (counter !== undefined) {
+      if (result.counter !== undefined) {
         setCounter(result.counter)
       }
     })
 
+    chrome.storage.local.get('username', (result) => {
+      if (result.username) {
+        setUsername(result.username)
+      }
+    })
+
+    // Update counter
     port.onMessage.addListener((message) => {
       if (message.type === "INCREMENT_COUNTER") {
         setCounter((prevCounter) => {
           const newCounter = prevCounter + 1
           chrome.storage.local.set({ counter: newCounter })
           return newCounter
-        }) // 更新 counter
+        })
       }
-    });
+    })
 
-    // 监听来自 content script 的消息
-    // const messageListener = (message, sender, sendResponse) => {
-    //   if (message.type === "INCREMENT_COUNTER") {
-    //     setCounter((prevCounter) => {
-    //       const newCounter = prevCounter + 1
-    //       chrome.storage.local.set({ counter: newCounter })
-    //       return newCounter
-    //     }) // 更新 counter
-    //     sendResponse({ success: true }); // 可选：返回响应
-    //   }
-    // };
-
-    // chrome.runtime.onMessage.addListener(messageListener);
-
-    // 清理消息监听器
+    // Clear listener
     return () => {
-      port.disconnect();
-      // chrome.runtime.onMessage.removeListener(messageListener);
-    };
-  }, []);
+      port.disconnect()
+    }
+  }, [])
+
+  const handleLogout = () => {
+    setUsername(null)
+    chrome.storage.local.remove(["token", "username"], () => {
+      console.log("Token and username removed")
+    })
+  }
 
   const handlePrivacyClick = () => {
     setPrivacyModalVisible(true);
@@ -68,7 +69,7 @@ function Popup() {
     <Layout className="P-layout">
       {/* Header */}
       <Header className="header">
-        <Title className="title">FactVax</Title>
+        <Title className="title">{username ? `Hi, ${username}` : `FactVax`} {username && (<LoginOutlined className='logout-icon' onClick={handleLogout} />)}</Title>
         <div className="logo">
           <img src={"/images/vaccine_icon.png"} alt="Logo" />
         </div>
@@ -80,10 +81,6 @@ function Popup() {
           <div className="switch-item">
             <p className="text">Enable FactVax service</p>
             <Switch defaultChecked={false} />
-          </div>
-          <div className="switch-item">
-            <p className="text">Switch to specific detection</p>
-            <Switch defaultChecked={true} />
           </div>
         </div>
         <Text className="misinformation-text">
@@ -270,10 +267,10 @@ function Popup() {
           </h4>
           <p
             style={{
-              textAlign: 'left', // 改为左对齐避免间距拉伸
-              margin: '0 0 5px 0', // 减少段落上下间距
-              lineHeight: '1.2', // 行距更紧凑
-              fontSize: '14px', // 统一字体大小
+              textAlign: 'left',
+              margin: '0 0 5px 0',
+              lineHeight: '1.2',
+              fontSize: '14px',
             }}
           >
             For questions or concerns about our privacy practices, please contact us at:
@@ -281,21 +278,17 @@ function Popup() {
               href="mailto:clientservice@factvax.com"
               style={{
                 color: '#007bff',
-                textDecoration: 'none', // 去掉默认下划线
-                display: 'inline', // 确保链接和文字一致
+                textDecoration: 'none',
+                display: 'inline',
               }}
             >
-              carlfish666@gmail.com
+              clientservice@factvax.com
             </a>.
           </p>
-
-
         </div>
       </Modal>
-
-
     </Layout>
-  );
+  )
 }
 
-export default Popup;
+export default Popup
