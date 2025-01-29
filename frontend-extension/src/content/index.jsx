@@ -36,9 +36,9 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 })
 
 /**
- * Listen to customized event sent from dashboard 
+ * Listen to customized login event sent from dashboard 
  */
-window.addEventListener('sendMessageToExtension', function (event) {
+window.addEventListener('sendMessageToExtensionLogin', function (event) {
   const data = event.detail
   console.log('The data send to content.js is: ', data);
 
@@ -48,3 +48,9 @@ window.addEventListener('sendMessageToExtension', function (event) {
   }
 })
 
+/**
+ * Listen to customized logout event sent from dashboard 
+ */
+window.addEventListener('sendMessageToExtensionLogout', function () {
+  chrome.runtime.sendMessage({ logout: true })
+})

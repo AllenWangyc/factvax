@@ -50,11 +50,13 @@ function Popup() {
     }
   }, [])
 
+
   const handleLogout = () => {
     setUsername(null)
-    chrome.storage.local.remove(["token", "username"], () => {
-      console.log("Token and username removed")
-    })
+    chrome.runtime.sendMessage({ logout: true })
+    // chrome.storage.local.remove(["token", "username"], () => {
+    //   console.log("Token and username removed")
+    // })
   }
 
   const handlePrivacyClick = () => {

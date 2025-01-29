@@ -87,6 +87,11 @@ chrome.runtime.onMessage.addListener(async function (message, sender, sendRespon
       console.log('username stored in chrome storage')
     })
   }
+  if (message.logout) {
+    chrome.storage.local.remove(["token", "username"], () => {
+      console.log("Token and username removed from background")
+    })
+  }
   return true
 })
 
