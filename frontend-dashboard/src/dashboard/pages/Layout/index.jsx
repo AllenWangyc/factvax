@@ -1,9 +1,10 @@
 import { Avatar, Layout, Menu, Popconfirm } from 'antd'
-import { SearchOutlined, HistoryOutlined, LineChartOutlined, UserOutlined } from '@ant-design/icons'
+import { ShrinkOutlined, ArrowsAltOutlined, SearchOutlined, HistoryOutlined, LineChartOutlined } from '@ant-design/icons'
 import './layout.styl'
 import { useNavigate, useLocation, Outlet } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import { fetchLogout } from '@/store/modules/user'
+import { useState } from 'react'
 
 const items = [
   {
@@ -28,6 +29,7 @@ const avatarBgColor = ['#FFB6C1', '#FFD700', '#87CEFA', '#90EE90', '#FFA07A', '#
 
 const DashboardLayout = () => {
   const { Header, Sider, Content } = Layout
+  const [collapsed, setCollapsed] = useState(false)
   const navigate = useNavigate()
   const location = useLocation()
   const { username, colorSeed } = useSelector(state => state.user)
@@ -66,6 +68,10 @@ const DashboardLayout = () => {
     navigate('/dashboard/login')
   }
 
+  const toggleCollapsed = () => {
+    setCollapsed(!collapsed)
+  }
+
   return (
     <div className="P-layout-wrapper">
       <Layout className='header-layout'>
@@ -95,7 +101,16 @@ const DashboardLayout = () => {
         </Header>
       </Layout>
       <Layout className='main-layout'>
-        <Sider className='sider'>
+        <Sider className={`sider ${collapsed ? 'collapsed' : ''}`}
+          collapsible={false}
+          collapsed={collapsed}
+        >
+          <div className="menu-header">
+            <span className="menu-title">Menu</span>
+            <div className="toggle-icon" onClick={toggleCollapsed}>
+              {collapsed ? <ShrinkOutlined /> : <ArrowsAltOutlined />}
+            </div>
+          </div>
           <Menu className='menu'
             mode='inline'
             items={items} // Add items to Menu bar
@@ -103,7 +118,7 @@ const DashboardLayout = () => {
             onClick={onMenuClick}
           />
         </Sider>
-        <Content className='content'>
+        <Content className={`content ${collapsed ? 'without-sider' : 'with-sider'}`}>
           <Outlet />
         </Content>
       </Layout>

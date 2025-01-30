@@ -1,3 +1,9 @@
+$primary-color = #71a2ff
+$light-bg-color = #f0f0f0
+$header-height = 8%
+$sider-width = 200px
+$sider-collapsed-width = 80px
+
 .P-layout-wrapper
   width 100%
   height 100vh
@@ -41,10 +47,50 @@
       z-index: 1000
       background-color: white
 
+      &.collapsed
+        width $sider-collapsed-width
+
+      .menu-header
+        display: flex
+        justify-content: space-between
+        align-items: center
+        padding: 8px 16px
+        background-color white
+
+        .menu-title
+          font-size 14px 
+          font-weight 500 
+          color #333 
+          margin: 0 
+
+        .toggle-icon
+          font-size 12px
+          cursor pointer
+          color $primary-color
+          background-color white
+          border-radius 50%
+          padding 4px
+          box-shadow 0 2px 4px rgba(250, 250, 250, 0.1)
+          transition all 0.3s
+
+          &:hover
+            color darken($primary-color, 10%)
+            box-shadow 0 3px 6px rgba(0, 0, 0, 0.2)
+
     .content
-      margin-left: 200px
+      // margin-left: 200px
+      flex-grow 1
       height 100%
       overflow-y: auto
       background-color: white
+      transition all 0.2s ease
+
+      &.with-sider
+        margin-left $sider-width
+        width calc(100% - $sider-width)
+
+      &.without-sider 
+        margin-left $sider-collapsed-width
+        width calc(100% - $sider-collapsed-width)
     
       
