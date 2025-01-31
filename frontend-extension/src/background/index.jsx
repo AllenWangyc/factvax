@@ -4,6 +4,7 @@ import { apiReqs } from "@/apis"
 
 let messageQueue = []
 let popupPort = null
+let isContextMenuEnabled = true
 
 /**
  * Set rules for extension execution
@@ -33,11 +34,9 @@ chrome.runtime.onInstalled.addListener(function () {
 
 // Add extension function into the context menu once installed
 chrome.runtime.onInstalled.addListener(() => {
-  chrome.contextMenus.create({
-    id: "detect-text",
-    title: "Detect vinccine information",
-    contexts: ["selection"]
-  })
+  if (isContextMenuEnabled) {
+    createContextMenu()
+  }
 })
 
 // Detect vaccine information when click the item in the context menu
@@ -81,12 +80,14 @@ chrome.runtime.onMessage.addListener(async function (message, sender, sendRespon
       console.error('Failed to retrieve token:', res)
     }
   }
+
   if (message.username) {
     const username = message.username
     await chrome.storage.local.set({ username }, function () {
       console.log('username stored in chrome storage')
     })
   }
+
   if (message.logout) {
     chrome.storage.local.remove(["token", "username"], () => {
       console.log("Token and username removed from background")
@@ -107,6 +108,12 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       messageQueue.push(message)
       console.log('The message has been cached in messageQueue.')
     }
+    sendResponse({ success: true })
+  }
+
+  if (message.type === "TOGGLE_CONTEXT_MENU") {
+    isContextMenuEnabled = message.enabled
+    updateContextMenu()
     sendResponse({ success: true })
   }
 })
@@ -153,3 +160,19 @@ chrome.runtime.onStartup.addListener(function () {
     }
   })
 })
+
+function createContextMenu() {
+  chrome.contextMenus.create({
+    id: "detect-text",
+    title: "Detect vinccine information",
+    contexts: ["selection"]
+  })
+}
+
+function updateContextMenu() {
+  chrome.contextMenus.removeAll(() => {
+    if (isContextMenuEnabled) {
+      createContextMenu()
+    }
+  })
+}

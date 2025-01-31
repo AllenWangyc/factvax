@@ -52,16 +52,16 @@ export default function DetectionPanel({ onClose, text }) {
         // Receive response and response including result property
         if (res.response) {
           // The selected text is related to vaccine info
-          if (res.response.related) {
+          if (res.response.result.related) {
             setRelated(true)
             // Selected text are credible
-            if (res.response.classification === 'accurate') {
+            if (res.response.result.classification === 'accurate') {
               setResult(CREDIBLE)
             }
             // Selected text is misleading
             else {
               setResult(MISLEADING)
-              setExplaination(res.response.correction)
+              setExplaination(res.response.result.correction)
             }
           }
           // Selected text is not related to vaccine info

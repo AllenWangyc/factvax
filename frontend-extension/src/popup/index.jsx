@@ -17,6 +17,7 @@ function Popup() {
   const [isPrivacyModalVisible, setPrivacyModalVisible] = useState(false)
   const [counter, setCounter] = useState(0)
   const [username, setUsername] = useState(null)
+  const [isEnabled, setIsEnabled] = useState(true) // Set the extension function able to turn up in context menu
 
   useEffect(() => {
     const port = chrome.runtime.connect({ name: "popup" })
@@ -30,6 +31,12 @@ function Popup() {
     chrome.storage.local.get('username', (result) => {
       if (result.username) {
         setUsername(result.username)
+      }
+    })
+
+    chrome.storage.sync.get("contextMenuEnabled", (data) => {
+      if (data.contextMenuEnabled !== undefined) {
+        setIsEnabled(data.contextMenuEnabled);
       }
     })
 
@@ -50,13 +57,16 @@ function Popup() {
     }
   }, [])
 
+  const handleContextMenu = () => {
+    const newState = !isEnabled
+    setIsEnabled(newState)
+    chrome.storage.sync.set({ contextMenuEnabled: newState })
+    chrome.runtime.sendMessage({ type: "TOGGLE_CONTEXT_MENU", enabled: newState })
+  }
 
   const handleLogout = () => {
     setUsername(null)
     chrome.runtime.sendMessage({ logout: true })
-    // chrome.storage.local.remove(["token", "username"], () => {
-    //   console.log("Token and username removed")
-    // })
   }
 
   const handlePrivacyClick = () => {
@@ -82,7 +92,7 @@ function Popup() {
         <div className="switch-section">
           <div className="switch-item">
             <p className="text">Enable FactVax service</p>
-            <Switch defaultChecked={false} />
+            <Switch checked={isEnabled} onClick={handleContextMenu} />
           </div>
         </div>
         <Text className="misinformation-text">
