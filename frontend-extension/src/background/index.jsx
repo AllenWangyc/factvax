@@ -114,6 +114,14 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.type === "TOGGLE_CONTEXT_MENU") {
     isContextMenuEnabled = message.enabled
     updateContextMenu()
+
+    // Broadcast all content tabs to switch enable status
+    chrome.tabs.query({}, (tabs) => {
+      tabs.forEach((tab) => {
+        chrome.tabs.sendMessage(tab.id, { type: "TOGGLE_CONTEXT_MENU", enabled: isContextMenuEnabled });
+      });
+    });
+
     sendResponse({ success: true })
   }
 })
