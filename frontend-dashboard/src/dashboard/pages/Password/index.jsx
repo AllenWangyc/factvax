@@ -7,7 +7,6 @@ import './password.styl';
 
 const PasswordReset = () => {
   const { Title } = Typography;
-  const { Password } = Input;
   const navigate = useNavigate();
   const [form] = Form.useForm();
   const [isVerifyDisabled, setIsVerifyDisabled] = useState(false);
@@ -27,7 +26,7 @@ const PasswordReset = () => {
 
   const validateEmail = (email) => /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email);
 
-  const onClickVerify = async (email) => {
+  const onClickVerify = async () => {
     if (!validateEmail(email)) {
       message.error('Please enter a valid email address.');
       return;
@@ -42,7 +41,7 @@ const PasswordReset = () => {
         setIsCodeVisible(true);
       }
     } catch (error) {
-      console.error(error); // 打印错误以供调试
+      console.error(error);
       message.error(error.response?.data?.message || 'Server Error. Try again later.');
       setIsVerifyDisabled(false);
       setCountdown(0);
@@ -83,16 +82,57 @@ const PasswordReset = () => {
           >
 
             <Form.Item className='reset-input-item'
-              name="email"
-              label="Email"
-              rules={[{ type: "email", message: "Please enter a valid email." }]}
+              name='email'
+              label='Email'
+              rules={[
+                { type: 'email', required: true, message: 'Please enter a valid email address.' },
+              ]}
             >
-              <Input
-                size="large"
-                className="input-item"
-                placeholder="e.g. example@gmail.com"
-              />
+              <div style={{ display: 'flex', gap: '10px' }}>
+                <Input
+                  size='large'
+                  className='input-item'
+                  placeholder='Enter your email'
+                />
+                <ConfigProvider
+                  theme={{
+                    components: {
+                      Button: {
+                        defaultBg: '#000',
+                        defaultColor: '#fff',
+                        defaultBorderColor: '#000',
+                        defaultHoverBg: '#333',
+                        defaultHoverColor: '#fff',
+                        defaultActiveBg: '#333',
+                        defaultActiveColor: '#fff'
+                      },
+                    },
+                  }}
+                >
+                  <Button
+                    size='large'
+                    onClick={onClickVerify}
+                    disabled={isVerifyDisabled}
+                  >
+                    {isVerifyDisabled ? `${countdown}s` : 'Verify'}
+                  </Button>
+                </ConfigProvider>
+
+              </div>
             </Form.Item>
+
+            {/* Verification Code Field */}
+            {isCodeVisible && (
+              <Form.Item className='reset-input-item'
+                name='code'
+                label='Verification Code'
+                rules={[
+                  { required: true, message: 'Please enter the verification code sent to your email.' },
+                ]}
+              >
+                <Input size='large' className='input-item' placeholder='Enter your verification code' />
+              </Form.Item>
+            )}
 
             <Form.Item className='reset-input-item'
               name="newPassword"

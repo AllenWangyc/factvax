@@ -193,6 +193,7 @@ const DashboardLayout = () => {
               selectedKeys={selectedKey} // Show which item is selected
               onClick={onMenuClick}
             />
+            <hr className="line" />
             <Menu className='menu'
               mode='inline'
               items={bottom_items} // Add items to Menu bar
