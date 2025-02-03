@@ -1,12 +1,15 @@
-import { Avatar, Layout, Menu, Popconfirm } from 'antd'
-import { ShrinkOutlined, ArrowsAltOutlined, SearchOutlined, HistoryOutlined, LineChartOutlined } from '@ant-design/icons'
+import { Avatar, Layout, Menu, Popconfirm, Dropdown } from 'antd'
+import {
+  ShrinkOutlined, ArrowsAltOutlined, SearchOutlined, HistoryOutlined, LineChartOutlined,
+  InfoCircleOutlined, SolutionOutlined, LogoutOutlined, EditOutlined
+} from '@ant-design/icons'
 import './layout.styl'
 import { useNavigate, useLocation, Outlet } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import { fetchLogout } from '@/store/modules/user'
 import { useState } from 'react'
 
-const items = [
+const top_items = [
   {
     label: 'Detection',
     key: '/dashboard',
@@ -21,6 +24,20 @@ const items = [
     label: 'Visualization',
     key: '/dashboard/visualization',
     icon: <LineChartOutlined />
+  },
+
+]
+
+const bottom_items = [
+  {
+    label: 'Info',
+    key: '/dashboard/info',
+    icon: <InfoCircleOutlined />
+  },
+  {
+    label: 'Term and Condition',
+    key: '/dashboard/term&condition',
+    icon: <SolutionOutlined />
   }
 ]
 
@@ -30,6 +47,7 @@ const avatarBgColor = ['#FFB6C1', '#FFD700', '#87CEFA', '#90EE90', '#FFA07A', '#
 const DashboardLayout = () => {
   const { Header, Sider, Content } = Layout
   const [collapsed, setCollapsed] = useState(false)
+  const [dropdownVisible, setDropdownVisible] = useState(false)
   const navigate = useNavigate()
   const location = useLocation()
   const { username, colorSeed } = useSelector(state => state.user)
@@ -68,36 +86,93 @@ const DashboardLayout = () => {
     navigate('/dashboard/login')
   }
 
+  const handleLogin = () => {
+    navigate('/dashboard/login')
+  }
+
   const toggleCollapsed = () => {
     setCollapsed(!collapsed)
   }
+
+  const onClickChangePassword = () => {
+    navigate('/dashboard/password')
+  }
+
+  // User drop down menu items at top right corner
+  const signedInUserMenuItems = [
+    {
+      key: 'username',
+      label: <span style={{ fontWeight: 'bold', color: '#333' }}>{username}</span>,
+      disabled: true
+    },
+    {
+      key: 'change-password',
+      label: (
+        <span
+          onClick={(e) => {
+            e.stopPropagation()
+            setDropdownVisible(false)
+            onClickChangePassword()
+          }}
+        >
+          <EditOutlined style={{ marginRight: 5 }} />
+          Change Password
+        </span>
+      ),
+    },
+    {
+      key: 'logout',
+      label: <span
+        onClick={(e) => {
+          e.stopPropagation()
+          handleLogout()
+        }}>
+        <LogoutOutlined style={{ marginRight: 5 }} />
+        Logout
+      </span>,
+    }
+  ]
+
+  const unsignedInUserMenuItems = [
+    {
+      key: 'login',
+      label: <span onClick={handleLogin}>Login</span>,
+    }
+  ]
 
   return (
     <div className="P-layout-wrapper">
       <Layout className='header-layout'>
         <Header className='header'>
-          {isLogin ?
-            <div className='status-container'>
-              <div className='log-opt-wrapper'>
-                <span className='log-opt' onClick={handleLogout}>Logout</span>
-              </div>
-              <Avatar
-                className='avatar'
-                style={{ backgroundColor: avatarBgColor[colorSeed], color: avatarFontColor[colorSeed] }}
-              >
-                {getInitialsFromUsername(username)}
-              </Avatar>
-            </div>
-            :
-            <div className='status-container'>
-              <div className='log-opt-wrapper'>
-                <span className='log-opt' onClick={handleLogout}>Login</span>
-              </div>
-              <Avatar className='avatar'
-                icon={<UserOutlined />}
-              />
-            </div>
-          }
+          {/* {isLogin ? */}
+          <div className='status-container'>
+            <Dropdown
+              menu={{ items: (isLogin ? signedInUserMenuItems : unsignedInUserMenuItems) }}
+              trigger={['click']}
+              open={dropdownVisible}
+              onOpenChange={(open) => setDropdownVisible(open)}
+            >
+              {isLogin ?
+                (<Avatar
+                  className="avatar"
+                  style={{
+                    cursor: 'pointer',
+                    backgroundColor: avatarBgColor[colorSeed],
+                    color: avatarFontColor[colorSeed]
+                  }}
+                >
+                  {getInitialsFromUsername(username)}
+                </Avatar>)
+                :
+                (
+                  <Avatar className='avatar'
+                    icon={<UserOutlined />}
+                  />
+                )
+              }
+
+            </Dropdown>
+          </div>
         </Header>
       </Layout>
       <Layout className='main-layout'>
@@ -111,12 +186,20 @@ const DashboardLayout = () => {
               {collapsed ? <ShrinkOutlined /> : <ArrowsAltOutlined />}
             </div>
           </div>
-          <Menu className='menu'
-            mode='inline'
-            items={items} // Add items to Menu bar
-            selectedKeys={selectedKey} // Show which item is selected
-            onClick={onMenuClick}
-          />
+          <div className='menu-container'>
+            <Menu className='menu'
+              mode='inline'
+              items={top_items} // Add items to Menu bar
+              selectedKeys={selectedKey} // Show which item is selected
+              onClick={onMenuClick}
+            />
+            <Menu className='menu'
+              mode='inline'
+              items={bottom_items} // Add items to Menu bar
+              selectedKeys={selectedKey} // Show which item is selected
+              onClick={onMenuClick}
+            />
+          </div>
         </Sider>
         <Content className={`content ${collapsed ? 'without-sider' : 'with-sider'}`}>
           <Outlet />

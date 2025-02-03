@@ -167,3 +167,21 @@ export function emailVerifyAPI(formData) {
     data: formData
   })
 }
+
+
+export function emailVerifyPasswordAPI(formData) {
+  return request({
+    url: '/api/user/code/',
+    method: 'POST',
+    data: formData
+  })
+}
+
+// Change Password 
+export function changePasswordAPI(data) {
+  return request({
+    url: '/api/user/change/',
+    method: 'POST',
+    data: data
+  })
+}

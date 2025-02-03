@@ -83,7 +83,7 @@ const Detection = () => {
     const { source } = values;
     if (!text.trim()) {
       message.warning("Please enter or speak text to detect.");
-      return;
+      return
     }
 
     setIsDetecting(true);

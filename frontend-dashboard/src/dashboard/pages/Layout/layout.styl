@@ -40,7 +40,8 @@ $sider-collapsed-width = 80px
 
     .sider
       position: fixed
-      left: 0
+      display: flex
+      flex-direction: column
       top: 8%
       bottom: 0
       width: 200px
@@ -76,6 +77,11 @@ $sider-collapsed-width = 80px
           &:hover
             color darken($primary-color, 10%)
             box-shadow 0 3px 6px rgba(0, 0, 0, 0.2)
+
+        .menu-container
+          display: flex
+          flex-grow 1 
+          justify-content: space-between
 
     .content
       // margin-left: 200px

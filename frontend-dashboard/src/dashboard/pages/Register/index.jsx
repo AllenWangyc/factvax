@@ -102,7 +102,7 @@ const Register = () => {
   };
 
   const onClickBack = () => {
-    navigate('/dashboard/login');
+    navigate(-1);
   };
 
   return (
