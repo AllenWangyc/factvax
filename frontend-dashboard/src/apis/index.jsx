@@ -104,13 +104,6 @@ export function logoutAPI() {
   })
 }
 
-export function userMisinfoRatioFetchByIDAPI() {
-  return request({
-    url: `/api/history/misinfo`,
-    method: 'GET',
-  })
-}
-
 export function userPlatformMisinfoRatioFetchByIDAPI() {
   return request({
     url: `/api/history/platform_data`,
@@ -121,27 +114,6 @@ export function userPlatformMisinfoRatioFetchByIDAPI() {
 export function userVaccineMisinfoRatioFetchByIDAPI() {
   return request({
     url: `/api/history/vax_times`,
-    method: 'GET',
-  })
-}
-
-export function userVaccineCheckNumFetchByIDAPI() {
-  return request({
-    url: `/api/history/total_num`,
-    method: 'GET',
-  })
-}
-
-export function userVaccineMisinfoNumFetchByIDAPI() {
-  return request({
-    url: `/api/history/total_misinfo`,
-    method: 'GET',
-  })
-}
-
-export function userVaccineDataSourceFetchByIDAPI() {
-  return request({
-    url: `/api/history/data_source`,
     method: 'GET',
   })
 }
@@ -184,4 +156,81 @@ export function changePasswordAPI(data) {
     method: 'POST',
     data: data
   })
+}
+
+export function userMisinfoRatioFetchByIDAPI() {
+  return request({
+    url: `/api/history/misinfo`,
+    method: 'GET',
+  });
+}
+
+export function userVaccineCheckNumFetchByIDAPI() {
+  return request({
+    url: `/api/history/total_num`,
+    method: 'GET',
+  });
+}
+
+export function userVaccineMisinfoNumFetchByIDAPI() {
+  return request({
+    url: `/api/history/total_misinfo`,
+    method: 'GET',
+  });
+}
+
+export function userVaccineDataSourceFetchByIDAPI() {
+  return request({
+    url: `/api/history/data_source`,
+    method: 'GET',
+  });
+}
+
+export function globalMisinfoRatioFetchAPI() {
+  return request({
+    url: `/api/history_g/misinfo`,
+    method: 'GET',
+  });
+}
+
+export function globalPlatformMisinfoRatioFetchAPI() {
+  return request({
+    url: `/api/history_g/platform_data`,
+    method: 'GET',
+  });
+}
+
+export function globalVaccineMisinfoRatioFetchAPI() {
+  return request({
+    url: `/api/history_g/vax_times`,
+    method: 'GET',
+  });
+}
+
+export function globalVaccineCheckNumFetchAPI() {
+  return request({
+    url: `/api/history_g/total_num`,
+    method: 'GET',
+  });
+}
+
+export function globalVaccineMisinfoNumFetchAPI() {
+  return request({
+    url: `/api/history_g/total_misinfo`,
+    method: 'GET',
+  });
+}
+
+export function globalVaccineDataSourceFetchAPI() {
+  return request({
+    url: `/api/history_g/data_source`,
+    method: 'GET',
+  });
+}
+
+export function globalMisinfoRatioInDaysFetchAPI() {
+  return request({
+    url: `/api/history_g/misinfo_rate_day`,
+    method: 'GET',
+  });
 }
