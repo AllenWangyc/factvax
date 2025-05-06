@@ -106,7 +106,7 @@ function Popup() {
           size="large"
           onClick={() => {
             chrome.tabs.create({
-              url: import.meta.env.VITE_DASHBOARD_DEV_URL,
+              url: import.meta.env.VITE_BACKEND_PRODUCT_ENV,
             });
           }}
         >

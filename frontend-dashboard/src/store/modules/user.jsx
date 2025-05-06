@@ -59,8 +59,8 @@ const fetchLogin = (loginForm) => {
 const fetchLoginByGoogle = () => {
   return async (dispatch) => {
     const res = await loginByGoogleAPI()
-    console.log('Google login response: ', res)
     dispatch(setLogin())
+    dispatch(setDeviceId())
     if (res.username) {
       dispatch(setUsername(res.username))
     }
@@ -73,8 +73,8 @@ const fetchLoginByGoogle = () => {
 const fetchLoginByGithub = () => {
   return async (dispatch) => {
     const res = await loginByGithubAPI()
-    console.log('Github login response: ', res)
     dispatch(setLogin())
+    dispatch(setDeviceId())
     if (res.username) {
       dispatch(setUsername(res.username))
     }

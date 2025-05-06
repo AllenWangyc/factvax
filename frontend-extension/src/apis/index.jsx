@@ -3,7 +3,7 @@
 import { apiFetch } from '@/apis/apiConfig.jsx'
 
 // const API_DOMAIN = 'http://localhost:5050/'
-const API_DOMAIN = 'https://fact-vax-app-e8d263b7267d.herokuapp.com/'
+const API_DOMAIN = 'https://www.factvax.online/'
 
 export const API_CODE = {
   // API success, data success
