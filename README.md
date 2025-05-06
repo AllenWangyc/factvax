@@ -1,32 +1,48 @@
-🛡️ FactVax: Vaccine Misinformation Detection on Social Media
-FactVax is a machine learning-powered application designed to detect the accuracy of vaccine-related content on social media platforms. By identifying misinformation in real time, it aims to strengthen public trust in vaccines and promote informed decision-making.
+# 🛡️ FactVax: Vaccine Misinformation Detection on Social Media
 
-🔍 Project Overview
-This project consists of two main components:
+**FactVax** is a machine learning-powered application designed to detect the accuracy of vaccine-related content on social media platforms. By identifying misinformation in real time, it aims to strengthen public trust in vaccines and promote informed decision-making.
 
-1. 🧩 Chrome Extension
-A lightweight browser extension that automatically scans vaccine-related content on popular social platforms (e.g., X/Twitter) while you browse. It provides:
+---
 
-✅ Real-time detection of vaccine misinformation
+## 🔍 Project Overview
 
-💬 In-page feedback on the credibility of information
+This project consists of **two main components**:
 
-🔒 Privacy-preserving local processing (where possible)
+### 🧩 Chrome Extension
 
-2. 🌐 Web Dashboard
-A more advanced interface for deeper interaction and exploration. The dashboard supports:
+A lightweight browser extension that automatically scans vaccine-related content on popular social platforms (e.g., X/Twitter) while you browse.
 
-🎙️ Voice input for querying vaccine-related content
+**Features:**
 
-📜 Searchable history of past analyses
+- ✅ Real-time detection of vaccine misinformation  
+- 💬 In-page feedback on the credibility of information  
+- 🔒 Privacy-preserving local processing (where possible)
 
-📊 Data visualization tools to monitor misinformation trends
+### 🌐 Web Dashboard
 
-🧠 Insights based on natural language processing and classification models
+An advanced web-based dashboard offering rich user interaction and exploration tools.
 
-🎯 Goals
-Detect and flag misleading vaccine information in real-time
+**Features:**
 
-Enhance public understanding and trust in scientifically verified vaccine data
+- 🎙️ **Voice input** for querying vaccine-related content  
+- 📜 **Searchable history** of past analyses  
+- 📊 **Data visualization** for monitoring misinformation trends  
+- 🧠 AI-driven insights based on NLP classification models
 
-Provide accessible tools for exploring and understanding online health discourse
+---
+
+## 🎯 Project Goals
+
+- Detect and flag misleading vaccine information in real time  
+- Enhance public understanding and trust in scientifically verified vaccine data  
+- Provide accessible tools to explore and visualize online vaccine-related discourse
+
+---
+
+## 🧠 Tech Stack
+
+- **Frontend**: React, Chrome Extension APIs, Antd component library  
+- **Backend**: Node.js, Express, MongoDB  
+- **AI Models**: Fine-tuned transformer models (e.g., BERT, GPT)  
+- **Visualization**: Chart.js / D3.js  
+- **Voice Input**: Web Speech API
